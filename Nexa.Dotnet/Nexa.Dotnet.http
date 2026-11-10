@@ -1,0 +1,6 @@
+@Nexa.Dotnet_HostAddress = http://localhost:5094
+
+GET {{Nexa.Dotnet_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

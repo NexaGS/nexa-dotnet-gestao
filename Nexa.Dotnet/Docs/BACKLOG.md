@@ -2,91 +2,91 @@
 
 ## Objetivo
 
-Permitir que gestores configurem os horÃ¡rios e a capacidade de atendimento das unidades do CitizenTech.
+Permitir que gestores configurem os horários e a capacidade de atendimento das unidades do CitizenTech.
 
-## US01 â€” Cadastrar unidade
+## US01 - Cadastrar unidade
 
 Como gestor, quero cadastrar uma unidade administrativa.
 
-CritÃ©rios:
+Critérios:
 
 - POST /api/unidades-gestao;
-- nome, cÃ³digo CNES e endereÃ§o obrigatÃ³rios;
-- dados invÃ¡lidos retornam 400;
-- cadastro vÃ¡lido retorna 201.
+- nome, código CNES e endereço obrigatórios;
+- dados inválidos retornam 400;
+- cadastro válido retorna 201.
 
-## US02 â€” Consultar unidades
+## US02 - Consultar unidades
 
 Como gestor, quero consultar unidades cadastradas.
 
-CritÃ©rios:
+Critérios:
 
 - GET /api/unidades-gestao retorna 200;
 - GET /api/unidades-gestao/{id} retorna 200;
 - ID inexistente retorna 404.
 
-## US03 â€” Atualizar unidade
+## US03 - Atualizar unidade
 
 Como gestor, quero atualizar os dados da unidade.
 
-CritÃ©rios:
+Critérios:
 
 - PUT /api/unidades-gestao/{id};
-- dados invÃ¡lidos retornam 400;
+- dados inválidos retornam 400;
 - unidade inexistente retorna 404;
 - sucesso retorna 204.
 
-## US04 â€” Excluir unidade
+## US04 - Excluir unidade
 
 Como gestor, quero excluir uma unidade incorreta.
 
-CritÃ©rios:
+Critérios:
 
 - DELETE /api/unidades-gestao/{id};
 - unidade inexistente retorna 404;
 - sucesso retorna 204;
-- unidade com configuraÃ§Ãµes deve ter a exclusÃ£o restringida.
+- unidade com configurações deve ter a exclusÃ£o restringida.
 
-## US05 â€” Cadastrar configuraÃ§Ã£o operacional
+## US05 - Cadastrar configuração operacional
 
 Como gestor, quero configurar o funcionamento de uma unidade.
 
-CritÃ©rios:
+Critérios:
 
 - POST /api/configuracoes-operacionais;
 - unidade relacionada deve existir;
-- horÃ¡rio de abertura deve ser anterior ao fechamento;
+- horário de abertura deve ser anterior ao fechamento;
 - capacidade deve ser maior que zero;
-- tempo mÃ©dio deve ser maior que zero;
+- tempo médio deve ser maior que zero;
 - sucesso retorna 201.
 
-## US06 â€” Consultar configuraÃ§Ãµes
+## US06 - Consultar configurações
 
 Como gestor, quero visualizar a agenda e a capacidade da unidade.
 
-CritÃ©rios:
+Critérios:
 
 - GET /api/configuracoes-operacionais;
 - filtro opcional por unidadeGestaoId;
 - consulta por ID retorna 200;
 - ID inexistente retorna 404.
 
-## US07 â€” Atualizar configuraÃ§Ã£o
+## US07 - Atualizar configuração
 
-Como gestor, quero alterar horÃ¡rio, capacidade ou tempo mÃ©dio.
+Como gestor, quero alterar horário, capacidade ou tempo médio.
 
 CritÃ©rios:
 
 - PUT /api/configuracoes-operacionais/{id};
-- nÃ£o permitir duas configuraÃ§Ãµes ativas para a mesma unidade e dia;
-- dados invÃ¡lidos retornam 400;
+- não permitir duas configurações ativas para a mesma unidade e dia;
+- dados inválidos retornam 400;
 - sucesso retorna 204.
 
-## US08 â€” Excluir configuraÃ§Ã£o
+## US08 - Excluir configuração
 
-Como gestor, quero remover uma configuraÃ§Ã£o incorreta.
+Como gestor, quero remover uma configuração incorreta.
 
-CritÃ©rios:
+Critérios:
 
 - DELETE /api/configuracoes-operacionais/{id};
 - ID inexistente retorna 404;

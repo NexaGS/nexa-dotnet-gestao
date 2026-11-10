@@ -1,11 +1,11 @@
 ﻿# Arquitetura
 
-## DivisÃ£o entre APIs
+## Divisão entre APIs
 
 ### Spring Boot
 
 - pacientes;
-- localizaÃ§Ã£o;
+- localização;
 - check-in;
 - fila;
 - encerramento de atendimentos.
@@ -14,8 +14,8 @@
 
 - cadastro administrativo;
 - agenda das unidades;
-- capacidade diÃ¡ria;
-- tempo mÃ©dio de atendimento.
+- capacidade diária;
+- tempo médio de atendimento.
 
 ## Modelo
 
@@ -23,7 +23,7 @@
 UnidadeGestao 1 ---- N ConfiguracaoOperacional
 ```
 
-Uma unidade pode ter uma configuraÃ§Ã£o para cada dia da semana.
+Uma unidade pode ter uma configuração para cada dia da semana.
 
 ## Camadas
 
@@ -51,10 +51,10 @@ Program.cs
 - unidade relacionada deve existir;
 - abertura anterior ao fechamento;
 - capacidade maior que zero;
-- tempo mÃ©dio maior que zero;
-- nÃ£o permitir duas configuraÃ§Ãµes ativas para a mesma unidade e dia;
-- restringir exclusÃ£o de unidade com configuraÃ§Ãµes vinculadas.
+- tempo médio maior que zero;
+- não permitir duas configurações ativas para a mesma unidade e dia;
+- restringir exclusão de unidade com configurações vinculadas.
 
 ## Erros
 
-Use 400 para validaÃ§Ã£o e 404 quando o recurso nÃ£o existir.
+Use 400 para validação e 404 quando o recurso não existir.

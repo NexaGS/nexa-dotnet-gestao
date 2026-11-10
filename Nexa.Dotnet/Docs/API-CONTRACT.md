@@ -33,7 +33,7 @@ DELETE /api/configuracoes-operacionais/{id}
 
 Resposta: 201 Created.
 
-## POST configuraÃ§Ã£o
+## POST configuração
 
 ```json
 {
@@ -49,13 +49,13 @@ Resposta: 201 Created.
 
 Resposta: 201 Created.
 
-## Status obrigatÃ³rios
+## Status obrigatórios
 
-- GET vÃ¡lido: 200;
-- POST vÃ¡lido: 201;
-- PUT vÃ¡lido: 204;
-- DELETE vÃ¡lido: 204;
-- dado invÃ¡lido: 400;
+- GET válido: 200;
+- POST válido: 201;
+- PUT válido: 204;
+- DELETE válido: 204;
+- dado inválido: 400;
 - ID inexistente: 404.
 
 ## Erro 400
