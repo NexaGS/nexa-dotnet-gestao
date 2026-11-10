@@ -2,7 +2,7 @@
 
 API REST complementar do CitizenTech para a disciplina Advanced Business Development with .NET.
 
-O Spring Boot permanece responsÃ¡vel por pacientes, localizaÃ§Ã£o, check-in e fila. O .NET serÃ¡ o mÃ³dulo administrativo de agenda e capacidade das unidades.
+O Spring Boot permanece responsável por pacientes, localização, check-in e fila. O .NET será o módulo administrativo de agenda e capacidade das unidades.
 
 ## Modelo
 
@@ -42,14 +42,14 @@ UnidadeGestao 1 ---- N ConfiguracaoOperacional
 ## Escopo
 
 - CRUD de unidades administrativas;
-- CRUD de configuraÃ§Ãµes operacionais;
+- CRUD de configurações operacionais;
 - agenda semanal;
-- capacidade diÃ¡ria;
-- tempo mÃ©dio de atendimento;
-- validaÃ§Ãµes;
+- capacidade diária;
+- tempo médio de atendimento;
+- validações;
 - respostas HTTP 201, 204, 400 e 404.
 
-NÃ£o fazem parte desta entrega autenticaÃ§Ã£o, integraÃ§Ã£o real com SUS, geolocalizaÃ§Ã£o ou fila em tempo real.
+Não fazem parte desta entrega autenticação, integração real com SUS, geolocalização ou fila em tempo real.
 
 ## Pacotes
 
@@ -82,7 +82,7 @@ As tabelas recomendadas sÃ£o:
 - NET_UNIDADES_GESTAO
 - NET_CONFIGURACOES_OPERACIONAIS
 
-## ExecuÃ§Ã£o
+## Execução
 
 ```bash
 dotnet restore
@@ -90,7 +90,7 @@ dotnet build
 dotnet run
 ```
 
-## DocumentaÃ§Ã£o
+## Documentação
 
 - docs/BACKLOG.md
 - docs/ARCHITECTURE.md
