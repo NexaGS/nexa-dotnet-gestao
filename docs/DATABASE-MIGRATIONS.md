@@ -1,12 +1,12 @@
 ﻿# Oracle e Migrations
 
-## Regras
+## Tabelas
 
-- O schema deve ser criado por EF Core Migrations;
-- não criar tabelas manualmente;
-- versionar a pasta Migrations;
-- não versionar senha;
-- usar tabelas próprias da API .NET.
+A Migration deverÃ¡ criar:
+
+- NET_UNIDADES_GESTAO;
+- NET_CONFIGURACOES_OPERACIONAIS;
+- chave estrangeira entre as tabelas.
 
 ## Comandos
 
@@ -16,31 +16,23 @@ dotnet ef migrations list
 dotnet ef database update
 ```
 
-Para uma alteração futura:
+## Regras
 
-```bash
-dotnet ef migrations add NomeDaAlteracao
-dotnet ef database update
-```
+- nÃ£o criar tabelas manualmente;
+- versionar a pasta Migrations;
+- nÃ£o versionar senha;
+- usar User Secrets ou variÃ¡vel de ambiente;
+- manter tabelas separadas do Spring Boot.
 
 ## Checklist
 
-1. Configurar a connection string com Secret Manager;
-2. executar dotnet ef database update;
-3. conferir as tabelas no Oracle;
-4. cadastrar uma unidade;
-5. cadastrar um atendimento;
-6. conferir a chave estrangeira;
-7. demonstrar os status HTTP.
+1. Configurar a conexÃ£o Oracle.
+2. Executar dotnet ef database update.
+3. Conferir as tabelas no Oracle.
+4. Conferir a chave estrangeira.
+5. Cadastrar uma unidade.
+6. Cadastrar uma configuraÃ§Ã£o.
+7. Testar erro 400.
+8. Testar erro 404.
 
-## Segurança
-
-O repositório não deve conter:
-
-- senha;
-- usuário Oracle;
-- arquivo .env;
-- connection string real;
-- dumps do banco.
-
-Use User Secrets ou variáveis de ambiente.
+Nunca versionar senha, .env, dumps ou connection strings reais.

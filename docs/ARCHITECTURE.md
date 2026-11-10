@@ -1,83 +1,60 @@
-﻿# Arquitetura e implementação
+﻿# Arquitetura
+
+## DivisÃ£o entre APIs
+
+### Spring Boot
+
+- pacientes;
+- localizaÃ§Ã£o;
+- check-in;
+- fila;
+- encerramento de atendimentos.
+
+### .NET
+
+- cadastro administrativo;
+- agenda das unidades;
+- capacidade diÃ¡ria;
+- tempo mÃ©dio de atendimento.
+
+## Modelo
+
+```text
+UnidadeGestao 1 ---- N ConfiguracaoOperacional
+```
+
+Uma unidade pode ter uma configuraÃ§Ã£o para cada dia da semana.
 
 ## Camadas
 
 ```text
-HTTP Controller -> DTO/Validation -> DbContext -> Oracle
+Controller -> DTO/Validation -> DbContext -> Oracle
 ```
 
-## Estrutura sugerida
+## Estrutura
 
 ```text
 Controllers/
+  UnidadesGestaoController.cs
+  ConfiguracoesOperacionaisController.cs
 Data/
+  NexaDbContext.cs
 DTOs/
 Models/
 Migrations/
 Exceptions/
 Program.cs
-appsettings.json
 ```
 
-## Relacionamento
+## Regras
 
-Uma UnidadeSaude possui muitos Atendimentos.
+- unidade relacionada deve existir;
+- abertura anterior ao fechamento;
+- capacidade maior que zero;
+- tempo mÃ©dio maior que zero;
+- nÃ£o permitir duas configuraÃ§Ãµes ativas para a mesma unidade e dia;
+- restringir exclusÃ£o de unidade com configuraÃ§Ãµes vinculadas.
 
-O Atendimento deve possuir:
+## Erros
 
-- propriedade UnidadeSaudeId;
-- propriedade de navegação UnidadeSaude;
-- chave estrangeira obrigatória.
-
-Configure no DbContext:
-
-- tabela NET_UNIDADES_SAUDE;
-- tabela NET_ATENDIMENTOS;
-- relacionamento HasOne/WithMany;
-- chave estrangeira;
-- delete restrito;
-- tamanhos e campos obrigatórios.
-
-## Validações
-
-Regras mínimas:
-
-- Nome obrigatório, entre 3 e 150 caracteres;
-- CEP no formato 00000-000;
-- CPF com 11 dígitos;
-- Status: ABERTO, EM_ATENDIMENTO ou ENCERRADO;
-- Prioridade: NORMAL ou PRIORITARIO;
-- UnidadeSaudeId obrigatório;
-- unidade informada deve existir.
-
-Use DataAnnotations ou FluentValidation.
-
-O atributo [ApiController] pode retornar 400 automaticamente para ModelState inválido.
-
-## Controllers
-
-Cada Controller deve implementar:
-
-- GET lista;
-- GET por ID;
-- POST;
-- PUT;
-- DELETE.
-
-O POST deve usar CreatedAtAction.
-
-PUT e DELETE devem retornar NoContent.
-
-## Tratamento de erros
-
-Use NotFound quando o recurso não existir.
-
-Formato sugerido:
-
-```json
-{
-  "status": 404,
-  "mensagem": "Unidade de saúde não encontrada.",
-  "timestamp": "2026-11-09T18:30:00Z"
-}
-```
+Use 400 para validaÃ§Ã£o e 404 quando o recurso nÃ£o existir.

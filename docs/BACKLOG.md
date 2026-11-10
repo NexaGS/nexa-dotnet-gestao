@@ -1,82 +1,103 @@
-﻿# Backlog e histórias
+﻿# Backlog
 
 ## Objetivo
 
-Permitir que gestores cadastrem unidades de saúde e registrem atendimentos do CitizenTech, com persistência no Oracle.
+Permitir que gestores configurem os horÃ¡rios e a capacidade de atendimento das unidades do CitizenTech.
 
-## US01 — Cadastrar unidade
+## US01 â€” Cadastrar unidade
 
-Como gestor, quero cadastrar uma unidade de saúde para disponibilizá-la no CitizenTech.
+Como gestor, quero cadastrar uma unidade administrativa.
 
-Critérios de aceite:
+CritÃ©rios:
 
-- POST /api/unidades;
-- campos obrigatórios;
-- dados inválidos retornam 400;
-- cadastro válido retorna 201;
-- resposta contém o ID criado.
+- POST /api/unidades-gestao;
+- nome, cÃ³digo CNES e endereÃ§o obrigatÃ³rios;
+- dados invÃ¡lidos retornam 400;
+- cadastro vÃ¡lido retorna 201.
 
-## US02 — Consultar unidades
+## US02 â€” Consultar unidades
 
-Como usuário, quero listar e consultar unidades cadastradas.
+Como gestor, quero consultar unidades cadastradas.
 
-Critérios de aceite:
+CritÃ©rios:
 
-- GET /api/unidades retorna 200;
-- GET /api/unidades/{id} retorna 200;
+- GET /api/unidades-gestao retorna 200;
+- GET /api/unidades-gestao/{id} retorna 200;
 - ID inexistente retorna 404.
 
-## US03 — Atualizar unidade
+## US03 â€” Atualizar unidade
 
-Como gestor, quero atualizar os dados de uma unidade.
+Como gestor, quero atualizar os dados da unidade.
 
-Critérios de aceite:
+CritÃ©rios:
 
-- PUT /api/unidades/{id};
+- PUT /api/unidades-gestao/{id};
+- dados invÃ¡lidos retornam 400;
 - unidade inexistente retorna 404;
-- dados inválidos retornam 400;
 - sucesso retorna 204.
 
-## US04 — Excluir unidade
+## US04 â€” Excluir unidade
 
-Como gestor, quero excluir um cadastro incorreto.
+Como gestor, quero excluir uma unidade incorreta.
 
-Critérios de aceite:
+CritÃ©rios:
 
-- DELETE /api/unidades/{id};
+- DELETE /api/unidades-gestao/{id};
 - unidade inexistente retorna 404;
-- exclusão válida retorna 204;
-- recomenda-se impedir exclusão quando houver atendimentos vinculados.
+- sucesso retorna 204;
+- unidade com configuraÃ§Ãµes deve ter a exclusÃ£o restringida.
 
-## US05 — Registrar atendimento
+## US05 â€” Cadastrar configuraÃ§Ã£o operacional
 
-Como cidadão ou sistema de atendimento, quero registrar um atendimento vinculado a uma unidade.
+Como gestor, quero configurar o funcionamento de uma unidade.
 
-Critérios de aceite:
+CritÃ©rios:
 
-- POST /api/atendimentos;
-- a unidade deve existir;
-- CPF e nome são obrigatórios;
-- unidade inexistente retorna 404;
-- cadastro válido retorna 201.
+- POST /api/configuracoes-operacionais;
+- unidade relacionada deve existir;
+- horÃ¡rio de abertura deve ser anterior ao fechamento;
+- capacidade deve ser maior que zero;
+- tempo mÃ©dio deve ser maior que zero;
+- sucesso retorna 201.
 
-## US06 — Gerenciar atendimentos
+## US06 â€” Consultar configuraÃ§Ãµes
 
-Como gestor, quero consultar, alterar e excluir atendimentos.
+Como gestor, quero visualizar a agenda e a capacidade da unidade.
 
-Critérios de aceite:
+CritÃ©rios:
 
-- CRUD completo;
-- dados inválidos retornam 400;
+- GET /api/configuracoes-operacionais;
+- filtro opcional por unidadeGestaoId;
+- consulta por ID retorna 200;
+- ID inexistente retorna 404.
+
+## US07 â€” Atualizar configuraÃ§Ã£o
+
+Como gestor, quero alterar horÃ¡rio, capacidade ou tempo mÃ©dio.
+
+CritÃ©rios:
+
+- PUT /api/configuracoes-operacionais/{id};
+- nÃ£o permitir duas configuraÃ§Ãµes ativas para a mesma unidade e dia;
+- dados invÃ¡lidos retornam 400;
+- sucesso retorna 204.
+
+## US08 â€” Excluir configuraÃ§Ã£o
+
+Como gestor, quero remover uma configuraÃ§Ã£o incorreta.
+
+CritÃ©rios:
+
+- DELETE /api/configuracoes-operacionais/{id};
 - ID inexistente retorna 404;
-- PUT e DELETE válidos retornam 204.
+- sucesso retorna 204.
 
 ## Definition of Done
 
 - Projeto compila;
 - Migration aplica no Oracle;
-- tabelas são criadas;
-- relação 1:N funciona;
+- duas entidades possuem relacionamento 1:N;
+- CRUD completo funciona;
 - respostas 201, 204, 400 e 404 foram demonstradas;
-- nenhum segredo está no Git;
-- README permite reproduzir a execução.
+- nenhum segredo foi versionado;
+- README permite executar o projeto.

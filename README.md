@@ -1,76 +1,68 @@
 ﻿# Nexa .NET
 
-API REST da solução Nexa/CitizenTech para a disciplina Advanced Business Development with .NET — Global Solution 2026/2.
+API REST complementar do CitizenTech para a disciplina Advanced Business Development with .NET.
 
-Projeto orientado a ASP.NET Core 8, Entity Framework Core, Oracle FIAP e Migrations.
+O Spring Boot permanece responsÃ¡vel por pacientes, localizaÃ§Ã£o, check-in e fila. O .NET serÃ¡ o mÃ³dulo administrativo de agenda e capacidade das unidades.
 
-## Objetivo
-
-Criar uma API REST para gestão de unidades de saúde e atendimentos:
+## Modelo
 
 ```text
-UnidadeSaude 1 ---- N Atendimento
+UnidadeGestao 1 ---- N ConfiguracaoOperacional
 ```
-
-A API .NET será complementar ao Spring Boot. Não é necessário duplicar autenticação, geolocalização ou integração real com SUS.
-
-## Requisitos
-
-- ASP.NET Core 8 Web API com Controllers;
-- Entity Framework Core;
-- Provider Oracle.EntityFrameworkCore;
-- Migrations versionadas;
-- Duas entidades relacionadas em 1:N;
-- CRUD completo;
-- POST retornando 201;
-- PUT e DELETE retornando 204;
-- Erros de validação retornando 400;
-- IDs inexistentes retornando 404.
 
 ## Entidades
 
-### UnidadeSaude
+### UnidadeGestao
 
 - Id
 - Nome
+- CodigoCnes
 - Endereco
-- Cep
-- Tipo
 - Ativa
 
-### Atendimento
+### ConfiguracaoOperacional
 
 - Id
-- PacienteCpf
-- PacienteNome
-- Status
-- Prioridade
-- DataEntrada
-- UnidadeSaudeId
+- UnidadeGestaoId
+- DiaSemana
+- HoraAbertura
+- HoraFechamento
+- CapacidadeDiaria
+- TempoMedioAtendimento
+- Ativa
 
-## Pré-requisitos
+## Tecnologias
 
-- .NET SDK 8;
-- acesso ao Oracle da FIAP;
-- ferramenta dotnet-ef.
+- ASP.NET Core 8 Web API;
+- Entity Framework Core;
+- Oracle.EntityFrameworkCore;
+- Oracle FIAP;
+- EF Core Migrations.
+
+## Escopo
+
+- CRUD de unidades administrativas;
+- CRUD de configuraÃ§Ãµes operacionais;
+- agenda semanal;
+- capacidade diÃ¡ria;
+- tempo mÃ©dio de atendimento;
+- validaÃ§Ãµes;
+- respostas HTTP 201, 204, 400 e 404.
+
+NÃ£o fazem parte desta entrega autenticaÃ§Ã£o, integraÃ§Ã£o real com SUS, geolocalizaÃ§Ã£o ou fila em tempo real.
+
+## Pacotes
 
 ```bash
-dotnet tool install --global dotnet-ef
-```
-
-## Criar o projeto
-
-```bash
-dotnet new webapi -n Nexa.DotNet --use-controllers
-cd Nexa.DotNet
 dotnet add package Microsoft.EntityFrameworkCore --version 8.*
 dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.*
 dotnet add package Oracle.EntityFrameworkCore
+dotnet tool install --global dotnet-ef
 ```
 
-## Configuração segura
+## Oracle
 
-Nunca versionar senha ou connection string real.
+Nunca versionar senha.
 
 ```bash
 dotnet user-secrets init
@@ -85,14 +77,12 @@ dotnet ef database update
 dotnet ef migrations list
 ```
 
-As tabelas devem ser criadas exclusivamente pelas Migrations.
+As tabelas recomendadas sÃ£o:
 
-Recomenda-se utilizar:
+- NET_UNIDADES_GESTAO
+- NET_CONFIGURACOES_OPERACIONAIS
 
-- NET_UNIDADES_SAUDE
-- NET_ATENDIMENTOS
-
-## Execução
+## ExecuÃ§Ã£o
 
 ```bash
 dotnet restore
@@ -100,7 +90,7 @@ dotnet build
 dotnet run
 ```
 
-## Documentação
+## DocumentaÃ§Ã£o
 
 - docs/BACKLOG.md
 - docs/ARCHITECTURE.md
@@ -110,4 +100,4 @@ dotnet run
 
 ## Integrantes
 
-Preencher com nome completo, RM e turma antes da entrega.
+Preencher com nome, RM e turma.

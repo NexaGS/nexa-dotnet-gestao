@@ -1,19 +1,23 @@
 ﻿# Contrato da API
 
-## Rotas
+## Unidades
 
-```text
-GET    /api/unidades
-GET    /api/unidades/{id}
-POST   /api/unidades
-PUT    /api/unidades/{id}
-DELETE /api/unidades/{id}
+```http
+GET    /api/unidades-gestao
+GET    /api/unidades-gestao/{id}
+POST   /api/unidades-gestao
+PUT    /api/unidades-gestao/{id}
+DELETE /api/unidades-gestao/{id}
+```
 
-GET    /api/atendimentos
-GET    /api/atendimentos/{id}
-POST   /api/atendimentos
-PUT    /api/atendimentos/{id}
-DELETE /api/atendimentos/{id}
+## ConfiguraÃ§Ãµes
+
+```http
+GET    /api/configuracoes-operacionais
+GET    /api/configuracoes-operacionais/{id}
+POST   /api/configuracoes-operacionais
+PUT    /api/configuracoes-operacionais/{id}
+DELETE /api/configuracoes-operacionais/{id}
 ```
 
 ## POST unidade
@@ -21,37 +25,37 @@ DELETE /api/atendimentos/{id}
 ```json
 {
   "nome": "UBS Vila Mariana",
+  "codigoCnes": "1234567",
   "endereco": "Rua Vergueiro, 1000",
-  "cep": "04101-000",
-  "tipo": "UBS",
   "ativa": true
 }
 ```
 
-Resposta esperada: 201 Created.
+Resposta: 201 Created.
 
-## POST atendimento
+## POST configuraÃ§Ã£o
 
 ```json
 {
-  "pacienteCpf": "12345678901",
-  "pacienteNome": "Maria da Silva",
-  "status": "ABERTO",
-  "prioridade": "NORMAL",
-  "dataEntrada": "2026-11-09T18:30:00",
-  "unidadeSaudeId": 1
+  "unidadeGestaoId": 1,
+  "diaSemana": "SEGUNDA",
+  "horaAbertura": "07:00",
+  "horaFechamento": "19:00",
+  "capacidadeDiaria": 120,
+  "tempoMedioAtendimento": 20,
+  "ativa": true
 }
 ```
 
-Resposta esperada: 201 Created.
+Resposta: 201 Created.
 
-## Status HTTP
+## Status obrigatÃ³rios
 
-- GET válido: 200;
-- POST válido: 201;
-- PUT válido: 204;
-- DELETE válido: 204;
-- dados inválidos: 400;
+- GET vÃ¡lido: 200;
+- POST vÃ¡lido: 201;
+- PUT vÃ¡lido: 204;
+- DELETE vÃ¡lido: 204;
+- dado invÃ¡lido: 400;
 - ID inexistente: 404.
 
 ## Erro 400
@@ -59,13 +63,7 @@ Resposta esperada: 201 Created.
 ```json
 {
   "status": 400,
-  "mensagem": "Existem dados inválidos.",
-  "erros": [
-    {
-      "campo": "Nome",
-      "mensagem": "O nome é obrigatório."
-    }
-  ]
+  "mensagem": "A hora de abertura deve ser anterior ao fechamento."
 }
 ```
 
@@ -74,6 +72,6 @@ Resposta esperada: 201 Created.
 ```json
 {
   "status": 404,
-  "mensagem": "Unidade de saúde não encontrada."
+  "mensagem": "ConfiguraÃ§Ã£o operacional nÃ£o encontrada."
 }
 ```

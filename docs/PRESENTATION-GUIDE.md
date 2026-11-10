@@ -1,34 +1,33 @@
-﻿# Roteiro da apresentação
-
-## Demonstração
+﻿# Roteiro da apresentaÃ§Ã£o
 
 1. Apresentar o CitizenTech.
-2. Explicar que o Spring Boot atende a operação e o .NET atende o CRUD complementar.
-3. Mostrar o relacionamento UnidadeSaude 1:N Atendimento.
-4. Mostrar as entidades e o DbContext.
-5. Mostrar a pasta Migrations.
-6. Executar a Migration no Oracle.
-7. Mostrar as tabelas NET_UNIDADES_SAUDE e NET_ATENDIMENTOS.
-8. Fazer POST de unidade e demonstrar 201.
-9. Fazer POST de atendimento e demonstrar 201.
-10. Fazer PUT e DELETE e demonstrar 204.
-11. Fazer POST inválido e demonstrar 400.
-12. Consultar ID inexistente e demonstrar 404.
+2. Explicar que o Spring Boot opera pacientes, localizaÃ§Ã£o e fila.
+3. Explicar que o .NET administra agenda e capacidade.
+4. Mostrar o relacionamento UnidadeGestao 1:N ConfiguracaoOperacional.
+5. Mostrar entidades, DTOs e DbContext.
+6. Mostrar a pasta Migrations.
+7. Aplicar a Migration no Oracle.
+8. Mostrar as tabelas criadas.
+9. Criar uma unidade e demonstrar 201.
+10. Criar uma configuraÃ§Ã£o e demonstrar 201.
+11. Atualizar a capacidade e demonstrar 204.
+12. Enviar horÃ¡rio invÃ¡lido e demonstrar 400.
+13. Consultar ID inexistente e demonstrar 404.
 
-## Perguntas prováveis
+## Perguntas provÃ¡veis
 
-### Por que duas entidades?
+### A API calcula a fila?
 
-Para demonstrar o relacionamento 1:N exigido pela disciplina.
+NÃ£o. Ela mantÃ©m as configuraÃ§Ãµes administrativas. A fila continua no Spring Boot.
+
+### Por que separar as APIs?
+
+Para separar operaÃ§Ã£o do cidadÃ£o e gestÃ£o administrativa.
+
+### Por que a relaÃ§Ã£o Ã© 1:N?
+
+Uma unidade pode ter configuraÃ§Ãµes diferentes para cada dia da semana.
 
 ### Por que usar Migrations?
 
-Para versionar e reproduzir a criação do banco sem criar tabelas manualmente.
-
-### Qual é o fluxo da requisição?
-
-O Controller recebe a requisição, valida o DTO, usa o DbContext, persiste no Oracle e retorna o status HTTP adequado.
-
-### Por que o CPF não consulta o SUS real?
-
-A integração SUS é uma evolução do produto. Esta entrega exige principalmente CRUD, persistência, relacionamento e validações.
+Para versionar e reproduzir o banco Oracle sem criar tabelas manualmente.
