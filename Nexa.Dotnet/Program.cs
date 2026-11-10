@@ -1,10 +1,18 @@
+using Microsoft.EntityFrameworkCore;
+using Nexa.Dotnet.Client;
+using Nexa.Dotnet.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var stringConexao = builder.Configuration.GetConnectionString("OracleConnection");
+
+builder.Services.AddDbContext<NexaDbContext>(options => options.UseOracle(stringConexao));
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+builder.Services.AddHttpClient<IFeriadosHttpClient, FeriadosHttpClient>;
 
 var app = builder.Build();
 

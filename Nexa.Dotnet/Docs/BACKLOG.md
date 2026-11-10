@@ -10,7 +10,7 @@ Como gestor, quero cadastrar uma unidade administrativa.
 
 Critérios:
 
-- POST /api/unidades-gestao;
+- POST api/unidades-saude;
 - nome, código CNES e endereço obrigatórios;
 - dados inválidos retornam 400;
 - cadastro válido retorna 201.
@@ -21,8 +21,8 @@ Como gestor, quero consultar unidades cadastradas.
 
 Critérios:
 
-- GET /api/unidades-gestao retorna 200;
-- GET /api/unidades-gestao/{id} retorna 200;
+- GET api/unidades-saude retorna 200;
+- GET api/unidades-saude/{id} retorna 200;
 - ID inexistente retorna 404.
 
 ## US03 - Atualizar unidade
@@ -31,7 +31,7 @@ Como gestor, quero atualizar os dados da unidade.
 
 Critérios:
 
-- PUT /api/unidades-gestao/{id};
+- PUT api/unidades-saude/{id};
 - dados inválidos retornam 400;
 - unidade inexistente retorna 404;
 - sucesso retorna 204.
@@ -42,7 +42,7 @@ Como gestor, quero excluir uma unidade incorreta.
 
 Critérios:
 
-- DELETE /api/unidades-gestao/{id};
+- DELETE api/unidades-saude/{id};
 - unidade inexistente retorna 404;
 - sucesso retorna 204;
 - unidade com configurações deve ter a exclusÃ£o restringida.
