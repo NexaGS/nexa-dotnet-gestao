@@ -3,6 +3,7 @@ using Nexa.Dotnet.Client;
 using Nexa.Dotnet.Config;
 using Nexa.Dotnet.Data;
 using Nexa.Dotnet.Services;
+using static Nexa.Dotnet.Notifications.Notification;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services.AddScoped<ConfiguracaoOperacionalService>();
 builder.Services.AddSingleton<FeriadosConfig>();
 
 builder.Services.AddHttpClient<IFeriadosHttpClient, FeriadosHttpClient>();
+
+builder.Services.AddScoped<NotificationContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

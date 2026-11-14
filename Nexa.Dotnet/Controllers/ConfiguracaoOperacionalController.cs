@@ -31,7 +31,7 @@ public class ConfiguracaoOperacionalController : ControllerBase
         var configuracoes = _configuracaoOperacionalService.ListarConfiguracoesUnidadeAsync(unidadeId);
         if(configuracoes == null)
         {
-            return NotFound("Configurações não retornadas.");
+            return NotFound(new { status = 404, mensagem = $"Não foi possível retornar configurações da unidade de saúde de ID: {unidadeId}" });
         }
 
         return Ok(configuracoes);
@@ -42,23 +42,27 @@ public class ConfiguracaoOperacionalController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult RegistrarConfiguracao([FromBody] CriarConfiguracaoRequest request)
     {
-        var configuracao = _configuracaoOperacionalService.CriarConfiguracaoOperacional(request);
+        var configuracao = _configuracaoOperacionalService.CriarConfiguracaoAsync(request);
         if(configuracao == null)
         {
-            return BadRequest("Dados de configuração inválidos!");
+            return BadRequest($"Não foi possível criar nova configuração");
         }
-        return Created($"api/configuracoes/{configuracao.Id}", configuracao);
+        return CreatedAtAction(nameof(ConfiguracaoOperacional), new {id = configuracao.Id}, configuracao);
     }
 
 
     [HttpPut("{id}")]
+    [ProducesResponseType(typeof(ConfiguracaoOperacional), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult AtualizarConfiguracoes(int id, [FromBody] AtualizarConfiguracaoRequest request)
     {
-        return Ok();
+        return NoContent();
     }
 
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult ExcluirConfiguracao(int id)
     {
         return NoContent();

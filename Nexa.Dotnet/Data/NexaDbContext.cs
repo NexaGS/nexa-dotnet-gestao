@@ -10,4 +10,6 @@ public class NexaDbContext : DbContext
     }
     public DbSet<UnidadeSaudeGestao> UnidadesSaude => Set<UnidadeSaudeGestao>();
     public DbSet<ConfiguracaoOperacional> ConfiguracoesOperacionais => Set<ConfiguracaoOperacional>();
+
+    public Task SalvarAlteracoes() => SaveChangesAsync();
 }
