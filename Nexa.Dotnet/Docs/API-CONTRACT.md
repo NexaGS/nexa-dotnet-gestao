@@ -10,7 +10,7 @@ PUT    /api/unidades-gestao/{id}
 DELETE /api/unidades-gestao/{id}
 ```
 
-## ConfiguraÃ§Ãµes
+## Configurações
 
 ```http
 GET    /api/configuracoes-operacionais
@@ -72,6 +72,6 @@ Resposta: 201 Created.
 ```json
 {
   "status": 404,
-  "mensagem": "ConfiguraÃ§Ã£o operacional nÃ£o encontrada."
+  "mensagem": "Configuração operacional não encontrada."
 }
 ```

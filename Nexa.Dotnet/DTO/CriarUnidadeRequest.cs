@@ -5,11 +5,11 @@ namespace Nexa.Dotnet.DTOs;
 public class CriarUnidadeRequest
 {
     [Required(ErrorMessage = "O nome da unidade é obrigatório.")]
-    [StringLength(150, MinimumLength = 3, ErrorMessage = "O nome da unidade deve ter entre 3 e 150 caracteres.")]
+    [StringLength(maximumLength: 100, ErrorMessage = "O nome da unidade deve ter até 100 caracteres.")]
     public string NomeUnidade { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O código CNES é obrigatório.")]
-    [StringLength(20, MinimumLength = 4, ErrorMessage = "O código CNES deve ter entre 4 e 20 caracteres.")]
+    [StringLength(maximumLength: 20, ErrorMessage = "O código CNES deve ter no máximo 20 caracteres.")]
     public string CodigoCnes { get; set; } = string.Empty;
 
     public bool Ativa { get; set; } = true;

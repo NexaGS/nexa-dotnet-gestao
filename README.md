@@ -92,11 +92,12 @@ dotnet run
 
 ## Documentação
 
-- docs/BACKLOG.md
-- docs/ARCHITECTURE.md
-- docs/API-CONTRACT.md
-- docs/DATABASE-MIGRATIONS.md
-- docs/PRESENTATION-GUIDE.md
+- Nexa.Dotnet/Docs/PLANO-DESENVOLVIMENTO-GUIA.md (Plano Diretor, Status & Micro-sprints)
+- Nexa.Dotnet/Docs/BACKLOG.md
+- Nexa.Dotnet/Docs/ARCHITECTURE.md
+- Nexa.Dotnet/Docs/API-CONTRACT.md
+- Nexa.Dotnet/Docs/DATABASE-MIGRATIONS.md
+- Nexa.Dotnet/Docs/PRESENTATION-GUIDE.md
 
 ## Integrantes
 
