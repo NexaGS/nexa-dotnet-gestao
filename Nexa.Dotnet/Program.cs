@@ -2,8 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Nexa.Dotnet.Client;
 using Nexa.Dotnet.Config;
 using Nexa.Dotnet.Data;
+using Nexa.Dotnet.Notifications;
 using Nexa.Dotnet.Services;
-using static Nexa.Dotnet.Notifications.Notification;
 
 var builder = WebApplication.CreateBuilder(args);
 

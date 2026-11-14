@@ -40,21 +40,21 @@ public class ConfiguracaoOperacionalController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(ConfiguracaoOperacional), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult RegistrarConfiguracao([FromBody] CriarConfiguracaoRequest request)
+    public async Task<IActionResult> RegistrarConfiguracao([FromBody] CriarConfiguracaoRequest request)
     {
         var configuracao = _configuracaoOperacionalService.CriarConfiguracaoAsync(request);
         if(configuracao == null)
         {
             return BadRequest($"Não foi possível criar nova configuração");
         }
-        return CreatedAtAction(nameof(ConfiguracaoOperacional), new {id = configuracao.Id}, configuracao);
+        return CreatedAtAction(nameof(BuscarConfiguracoesUnidade), new {id = configuracao.Id}, configuracao);
     }
 
 
     [HttpPut("{id}")]
     [ProducesResponseType(typeof(ConfiguracaoOperacional), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult AtualizarConfiguracoes(int id, [FromBody] AtualizarConfiguracaoRequest request)
+    public async Task<IActionResult> AtualizarConfiguracoes(int id, [FromBody] AtualizarConfiguracaoRequest request)
     {
         return NoContent();
     }
@@ -63,8 +63,9 @@ public class ConfiguracaoOperacionalController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult ExcluirConfiguracao(int id)
+    public async Task<IActionResult> ExcluirConfiguracao(int id)
     {
+        var configuracao = await _configuracaoOperacionalService.ExcluirConfiguracaoAsync(id);
         return NoContent();
     }
 }

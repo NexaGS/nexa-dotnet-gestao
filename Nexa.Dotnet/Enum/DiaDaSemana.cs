@@ -1,5 +1,8 @@
-﻿namespace Nexa.Dotnet.Enum;
+﻿using System.Text.Json.Serialization;
 
+namespace Nexa.Dotnet.Enum;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum DiaDaSemana
 {
     Domingo = 0,

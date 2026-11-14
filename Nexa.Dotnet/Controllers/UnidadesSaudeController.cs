@@ -41,33 +41,78 @@ public class UnidadesSaudeController : ControllerBase
 	[HttpPost]
     [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public IActionResult CriarUnidadeSaude([FromBody] CriarUnidadeRequest request)
+    public async Task<IActionResult> CriarUnidadeSaude([FromBody] CriarUnidadeRequest request)
 	{
 		var unidade = _unidadesSaudeService.CriarUnidadeAsync(request);
 
 		if(unidade == null)
 		{
-            return BadRequest($"Não foi possível criar unidade de saúde");
+            return BadRequest(new { status = 400, mensagem = "Não foi possível criar unidade de saúde" });
         }
 
-        return CreatedAtAction(nameof(UnidadeSaudeGestao), new { id = unidade.Id }, unidade);
+        return CreatedAtAction(nameof(BuscarUnidadeSaude), new { id = unidade.Id }, unidade);
     }
 
 
-	[HttpPut("{id}")]
+	[HttpPut("{id}/nome")]
     [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult AtualizarUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
+    public async Task<IActionResult> AtualizarNomeUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
 	{
-		return NoContent();
+        var unidadeAtualizada = await _unidadesSaudeService.AtualizarNomeUnidadeAsync(id, request);
+
+		if(unidadeAtualizada == null)
+		{
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
+        }
+
+        return NoContent();
+	}
+
+	[HttpPut("{id}/statusAtividade")]
+    [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AtualizarStatusUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
+	{
+        var unidadeAtualizada = await _unidadesSaudeService.AtualizarStatusUnidadeAsync(id, request);
+
+		if(unidadeAtualizada == null)
+		{
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
+        }
+
+        return NoContent();
+	}
+
+	[HttpPut("{id}/endereco")]
+    [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AtualizarEnderecoUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
+	{
+        var unidadeAtualizada = await _unidadesSaudeService.AtualizarEnderecoUnidadeAsync(id, request);
+
+		if(unidadeAtualizada == null)
+		{
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
+        }
+
+        return NoContent();
 	}
 
 
 	[HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public IActionResult ExcluirUnidadeSaude(int id)
+    public async Task<IActionResult> ExcluirUnidadeSaude(int id)
 	{
+		var unidade = await _unidadesSaudeService.ExcluirUnidadeAsync(id);
+
+		if (!unidade)
+		{
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada." });
+        }
+
 		return NoContent();
 	}
 

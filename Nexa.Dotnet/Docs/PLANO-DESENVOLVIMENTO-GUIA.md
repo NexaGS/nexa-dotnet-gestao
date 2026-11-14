@@ -3,203 +3,234 @@
 **Disciplina:** Advanced Business Development with .NET (FIAP)  
 **Papéis:** Product Owner (P.O.) | Tech Lead | Quality Assurance (QA)  
 **Data da Última Atualização:** 14/11/2026  
-**Status Geral:** 🟢 Em Reta Final — Services Prontos, Controllers em Padronização  
+**Status Geral:** 🟢 Fase de Arremate Final — 95% do MVP Concluído  
 
 ---
 
 ## ⏱️ 1. Estimativa de Tempo de Conclusão Restante
 
-Com os avanços significativos realizados na camada de Serviços (`UnidadesSaudeService` e `ConfiguracaoOperacionalService`) e nos modelos, o tempo restante foi reduzido drasticamente:
+Com o ciclo de `POST`, `GET` e `DELETE` praticamente fechado e a arquitetura totalmente alinhada, o tempo restante foi reduzido para o arremate final:
 
-> ### ⏳ Tempo Restante Estimado para o MVP Completo: **~1h30 a 2h00**
+> ### ⏳ Tempo Restante Estimado para Conclusão Total: **~45 min a 1h00**
 
 ```mermaid
 gantt
-    title Cronograma Final do MVP Nexa .NET
+    title Reta Final do MVP Nexa .NET (Arremate)
     dateFormat  HH:mm
     axisFormat  %H:%M
     
-    section Reta Final
-    Swagger UI & User Secrets          :done1, 00:00, 15m
-    Ajuste das Controllers (201/204/404) :done2, after done1, 30m
-    Migrations no Oracle Local           :done3, after done2, 25m
-    Testes de Rotas e Push no Git        :done4, after done3, 20m
+    section Arremates Finais
+    Destrava do PUT de Unidades           :done1, 00:00, 15m
+    Destrava do PUT & DELETE Configurações :done2, after done1, 15m
+    Migrations no Oracle Local (Update)    :done3, after done2, 20m
+    Testes Finais no Swagger & Git Push    :done4, after done3, 15m
 ```
 
-| Etapa Restante | O que fazer | Tempo Estimado |
+| Etapa | O que falta | Tempo Estimado |
 | :--- | :--- | :---: |
-| **1. Swagger UI & Segredos** | Habilitar Swagger interativo no .NET e gravar senha com `dotnet user-secrets` | **15 min** |
-| **2. Fechamento das Controllers** | Retornar `CreatedAtAction` (201), `NoContent` (204) e 404 em JSON com `[ProducesResponseType]` | **30 min** |
-| **3. Migrations Oracle Local** | Rodar `dotnet ef migrations add InitialCreate` e `dotnet ef database update` | **25 min** |
-| **4. Testes & Commit GitHub** | Validar os 5 verbos no Swagger/HTTP file e commitar no GitHub | **20 min** |
+| **1. PUT de Unidades** | Receber `AtualizarUnidadeRequest` na Service e atualizar os campos cadastrais | **10 a 15 min** |
+| **2. PUT & DELETE de Configurações** | Atualizar horários/capacidade na Service e ligar na Controller | **10 a 15 min** |
+| **3. Migrations no Oracle** | Rodar `dotnet ef migrations add InitialCreate` e `dotnet ef database update` | **15 a 20 min** |
+| **4. Testes & Git Push** | Executar os endpoints pelo Swagger e commitar o projeto finalizado | **10 a 15 min** |
 
 ---
 
-## 📍 2. Diagnóstico das Controllers Implementadas (O que está certo e o que ajustar)
+## 🏆 2. O Que Já Temos de Bom e Construído no Momento
 
-### ✅ O que está correto:
-1. **Injeção de Dependência:** O construtor recebe o serviço corretamente (`_unidadesSaudeService`).
-2. **Uso de `[ProducesResponseType]`:** Você já começou a documentar os status (`200OK`, `404NotFound`, `201Created`), o que é a melhor prática para o Swagger.
-3. **Checagem de Nulo (404):** A lógica de verificar se a unidade existe antes de responder está perfeita.
+O projeto atingiu um nível de excelência notável para uma entrega de Global Solution:
 
-### ⚠️ O que precisa de ajuste fino:
-
-1. **Herança em `ConfiguracaoOperacionalController`:**
-   * Mude de `: Controller` para `: ControllerBase`. Em APIs REST não usamos Views HTML do MVC tradicional.
-2. **Formato do Retorno 404 (Regra da Rubrica da FIAP):**
-   * O edital exige: *"Dado inválido devolve 400 com mensagem em JSON; ID inexistente devolve 404."*
-   * Se você retornar `NotFound("texto puro")`, o ASP.NET Core devolve `text/plain`.
-   * **Correção:** Retorne um objeto anônimo:  
-     `return NotFound(new { status = 404, mensagem = "Unidade de saúde não encontrada." });`
-3. **Retorno do POST (Status 201 Created com Header Location):**
-   * Atualmente está `return Created();`.
-   * **Correção:** Use `CreatedAtAction`:
-     ```csharp
-     var novaUnidade = await _unidadesSaudeService.CriarUnidadeAsync(request);
-     return CreatedAtAction(nameof(BuscarUnidadeSaude), new { id = novaUnidade.Id }, novaUnidade);
-     ```
-4. **Retorno do PUT (Status 204 NoContent):**
-   * Atualmente está `return Ok();`.
-   * **Correção:** A rubrica pede `204 NoContent` para o PUT:  
-     `return NoContent();`
+1. **Modelagem de Domínio com Data Annotations:**
+   * `UnidadeSaudeGestao` (`tb_unidades_gestao`) e `ConfiguracaoOperacional` (`tb_configuracao_operacional`) devidamente mapeadas com chaves, colunas e limites.
+   * `Endereco` modelado elegantemente como **Value Object (`[Owned]`)**, embutido na tabela da unidade sem poluição de banco.
+2. **DbContext Minimalista e Limpo:**
+   * Apenas 15 linhas no `NexaDbContext.cs`, livre de boilerplate desnecessário.
+3. **Notification Pattern Nativo:**
+   * Implementação desacoplada com `NotificationContext` e `Notification`, permitindo validações ricas de abertura, fechamento e capacidade sem exceptions caras.
+4. **Enum com Serialização em Texto:**
+   * `DiaDaSemana` com `[JsonConverter(typeof(JsonStringEnumConverter))]`, permitindo envio legível no Swagger (`"Segunda"`, `"Terca"`) e salvamento eficiente como número no Oracle.
+5. **Segurança de Credenciais:**
+   * Segredos isolados via `dotnet user-secrets`, mantendo o `appsettings.json` e o Git 100% livres de senhas expostas.
+6. **Swagger UI Interativo Ativo:**
+   * Configuração de `UseSwagger()` e `UseSwaggerUI()` pronta para teste no navegador (`http://localhost:5000/swagger/index.html`).
+7. **Documentação de Entrega Completa:**
+   * `README.md` principal com integrantes, arquitetura, diagramas e todos os **payloads JSON prontos para teste**.
 
 ---
 
-## 🌐 3. Como Alinhar o Swagger Corretamente para Testes Visuais no .NET
+## 🔓 3. As Destravas: Códigos para Finalizar os PUTs e DELETEs
 
-No .NET 9/10, o `builder.Services.AddOpenApi()` gera apenas o arquivo JSON cru (`/openapi/v1.json`). Para ter a **interface visual interativa** (onde você clica em *Try it out* e testa os endpoints direto no navegador), siga um destes dois caminhos:
+Aqui está o código exato que falta para você destravar os métodos restantes:
 
-### Opção A: O Swagger UI Tradicional (Swashbuckle - Mais comum na FIAP)
-1. Instale o pacote:
-   ```bash
-   dotnet add package Swashbuckle.AspNetCore
-   ```
-2. No `Program.cs`, adicione:
-   ```csharp
-   builder.Services.AddEndpointsApiExplorer();
-   builder.Services.AddSwaggerGen();
-   ```
-3. Na pipeline (antes de `app.Run()`):
-   ```csharp
-   if (app.Environment.IsDevelopment())
-   {
-       app.UseSwagger();
-       app.UseSwaggerUI(); // Disponível em: http://localhost:5000/swagger/index.html
-   }
-   ```
+### Destrava 1: `PUT /api/unidades-saude/{id}`
 
-### Opção B: O Scalar UI (Moderno, nativo para .NET 9/10 com `AddOpenApi`)
-1. Instale o pacote:
-   ```bash
-   dotnet add package Scalar.AspNetCore
-   ```
-2. No `Program.cs`, apenas adicione:
-   ```csharp
-   if (app.Environment.IsDevelopment())
-   {
-       app.MapOpenApi();
-       app.MapScalarApiReference(); // Disponível em: http://localhost:5000/scalar/v1
-   }
-   ```
-
----
-
-## 🔔 4. Notification Pattern (`AddNotification`) no .NET: Como Funciona e Como Usar?
-
-### O que é e por que usar?
-Normalmente, desenvolvedores usam `throw new Exception("Erro tal")`.  
-**Problema:** A `Exception` interrompe a execução no primeiro erro. Se o usuário enviar um JSON com 3 campos errados (nome vazio, hora errada, capacidade negativa), ele receberá apenas 1 erro por vez.  
-**Com o Notification Pattern (`AddNotification`):** Você acumula todas as inconsistências e devolve uma única resposta `400 Bad Request` com **todas as falhas de uma só vez**!
-
-### Implementação Enxuta e Elegante (Sem bibliotecas pesadas)
-
-#### 1. Criar a classe `NotificationContext.cs` (em `Nexa.Dotnet/Notifications/`)
+#### Na Service (`UnidadesSaudeService.cs`):
 ```csharp
-namespace Nexa.Dotnet.Notifications;
-
-public class Notification
+public async Task<UnidadeSaudeGestao?> AtualizarUnidadeAsync(int id, AtualizarUnidadeRequest request)
 {
-    public string Campo { get; }
-    public string Mensagem { get; }
+    var unidade = BuscarPorId(id);
 
-    public Notification(string campo, string mensagem)
+    if (unidade == null)
     {
-        Campo = campo;
-        Mensagem = mensagem;
+        return null;
     }
-}
 
-public class NotificationContext
-{
-    private readonly List<Notification> _notifications = new();
+    // Atualiza os dados cadastrais da unidade
+    unidade.NomeUnidade = request.NomeUnidade;
+    unidade.Ativa = request.Ativa;
 
-    public IReadOnlyCollection<Notification> Notifications => _notifications.AsReadOnly();
-    public bool HasNotifications => _notifications.Any();
+    // Atualiza o endereço (Value Object)
+    unidade.Endereco.Logradouro = request.Endereco.Logradouro;
+    unidade.Endereco.Numero = request.Endereco.Numero;
+    unidade.Endereco.Complemento = request.Endereco.Complemento;
+    unidade.Endereco.Bairro = request.Endereco.Bairro;
+    unidade.Endereco.Cidade = request.Endereco.Cidade;
+    unidade.Endereco.Estado = request.Endereco.Estado;
+    unidade.Endereco.Cep = request.Endereco.Cep;
 
-    public void AddNotification(string campo, string mensagem)
-    {
-        _notifications.Add(new Notification(campo, mensagem));
-    }
+    _nexaDbContext.UnidadesSaude.Update(unidade);
+    await SalvarAlteracoes();
+
+    return unidade;
 }
 ```
 
-#### 2. Registrar no `Program.cs`
+#### Na Controller (`UnidadesSaudeController.cs`):
 ```csharp
-builder.Services.AddScoped<NotificationContext>();
+[HttpPut("{id:int}")]
+[ProducesResponseType(StatusCodes.Status204NoContent)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public async Task<IActionResult> AtualizarUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+
+    var unidadeAtualizada = await _unidadesSaudeService.AtualizarUnidadeAsync(id, request);
+
+    if (unidadeAtualizada == null)
+    {
+        return NotFound(new { status = 404, mensagem = $"Unidade de saúde com ID {id} não encontrada para atualização." });
+    }
+
+    return NoContent(); // 204 NoContent obrigatório na rubrica!
+}
 ```
 
-#### 3. Usar no Serviço (`ConfiguracaoOperacionalService.cs`)
+---
+
+### Destrava 2: `PUT /api/configuracoes-operacionais/{id}`
+
+#### Na Service (`ConfiguracaoOperacionalService.cs`):
 ```csharp
-public async Task<ConfiguracaoOperacional?> CriarConfiguracaoAsync(CriarConfiguracaoRequest request)
+public async Task<ConfiguracaoOperacional?> AtualizarConfiguracaoAsync(int id, AtualizarConfiguracaoRequest request)
 {
+    var configuracao = BuscarPorId(id);
+
+    if (configuracao == null)
+    {
+        return null;
+    }
+
+    // Validações com Notification Pattern
     if (request.HoraAbertura >= request.HoraFechamento)
     {
-        _notificationContext.AddNotification("HoraAbertura", "A hora de abertura deve ser anterior ao fechamento.");
+        _notificationContext.AddNotification("Hora da abertura deve ser anterior a hora de fechamento.");
     }
 
     if (request.CapacidadeDiaria <= 0)
     {
-        _notificationContext.AddNotification("CapacidadeDiaria", "A capacidade diária deve ser maior que zero.");
+        _notificationContext.AddNotification("Capacidade diária da unidade deve ser maior que 0.");
     }
 
-    // Se acumulou qualquer erro, para antes de tocar no banco!
+    if (request.TempoMedioAtendimentoMinutos <= 0)
+    {
+        _notificationContext.AddNotification("Tempo médio de atendimento deve ser maior que 0.");
+    }
+
     if (_notificationContext.HasNotifications)
     {
         return null;
     }
 
-    // Segue o fluxo normal de gravação...
+    // Atualiza os dados operacionais
+    configuracao.DiaSemana = request.DiaSemana;
+    configuracao.HoraAbertura = request.HoraAbertura;
+    configuracao.HoraFechamento = request.HoraFechamento;
+    configuracao.CapacidadeDiaria = request.CapacidadeDiaria;
+    configuracao.TempoMedioAtendimentoMinutos = request.TempoMedioAtendimentoMinutos;
+    configuracao.ConfiguracaoAtiva = request.ConfiguracaoAtiva;
+
+    _nexaDbContext.ConfiguracoesOperacionais.Update(configuracao);
+    await _nexaDbContext.SalvarAlteracoes();
+
+    return configuracao;
 }
 ```
 
-#### 4. Na Controller:
+#### Na Controller (`ConfiguracaoOperacionalController.cs`):
 ```csharp
-if (_notificationContext.HasNotifications)
+[HttpPut("{id:int}")]
+[ProducesResponseType(StatusCodes.Status204NoContent)]
+[ProducesResponseType(StatusCodes.Status400BadRequest)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public async Task<IActionResult> AtualizarConfiguracoes(int id, [FromBody] AtualizarConfiguracaoRequest request)
 {
-    return BadRequest(new { status = 400, erros = _notificationContext.Notifications });
+    var configAtualizada = await _configuracaoOperacionalService.AtualizarConfiguracaoAsync(id, request);
+
+    if (_notificationContext.HasNotifications)
+    {
+        return BadRequest(new { status = 400, erros = _notificationContext.notifications });
+    }
+
+    if (configAtualizada == null)
+    {
+        return NotFound(new { status = 404, mensagem = $"Configuração operacional com ID {id} não encontrada." });
+    }
+
+    return NoContent(); // 204 NoContent
 }
 ```
 
 ---
 
-## 🔐 5. Guia Rápido de Segurança (User Secrets do Oracle)
+### Destrava 3: `DELETE /api/configuracoes-operacionais/{id}`
 
-Para nunca colocar senha do banco no Git:
+Você já implementou `ExcluirConfiguracao` na Service! Agora basta ligar na Controller:
+
+#### Na Controller (`ConfiguracaoOperacionalController.cs`):
+```csharp
+[HttpDelete("{id:int}")]
+[ProducesResponseType(StatusCodes.Status204NoContent)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public async Task<IActionResult> ExcluirConfiguracao(int id)
+{
+    var excluido = await _configuracaoOperacionalService.ExcluirConfiguracao(id);
+
+    if (!excluido)
+    {
+        return NotFound(new { status = 404, mensagem = $"Configuração operacional com ID {id} não encontrada para exclusão." });
+    }
+
+    return NoContent(); // 204 NoContent
+}
+```
+
+---
+
+## 🗄️ 4. Como Executar as Migrations no Oracle (Próximo Passo)
+
+Assim que colocar essas destravas, você já pode executar o banco:
+
 ```powershell
 cd Nexa.Dotnet
-dotnet user-secrets init
-dotnet user-secrets set "ConnectionStrings:OracleConnection" "User Id=system;Password=suaSenhaLocal123;Data Source=localhost:1521/FREE"
+
+# 1. Cria os arquivos C# da migração
+dotnet ef migrations add InitialCreate
+
+# 2. Executa a criação física das tabelas no Oracle
+dotnet ef database update
 ```
-*(O `appsettings.Development.json` fica no Git limpo, sem senhas).*
 
----
-
-## 🎯 6. Checklist Final do QA (Garantia dos 100 Pontos)
-
-- [ ] Todas as controllers herdam de `ControllerBase` e usam `[ApiController]`.
-- [ ] `GET /id` inexistente retorna `404 Not Found` em formato JSON.
-- [ ] `POST` de unidade e configuração retorna `201 Created` com header `Location`.
-- [ ] `PUT` retorna `204 NoContent`.
-- [ ] `DELETE` retorna `204 NoContent`.
-- [ ] Erros de validação retornam `400 Bad Request` em formato JSON.
-- [ ] Pasta `Migrations/` criada e versionada no Git.
+O EF Core cuidará de criar as tabelas `TB_UNIDADES_GESTAO` e `TB_CONFIGURACAO_OPERACIONAL` com a chave estrangeira e todas as colunas.

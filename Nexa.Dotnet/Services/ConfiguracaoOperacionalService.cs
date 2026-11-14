@@ -1,7 +1,7 @@
 ﻿using Nexa.Dotnet.Data;
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Models;
-using static Nexa.Dotnet.Notifications.Notification;
+using Nexa.Dotnet.Notifications;
 
 namespace Nexa.Dotnet.Services;
 
@@ -65,5 +65,40 @@ public class ConfiguracaoOperacionalService
         await _nexaDbContext.SalvarAlteracoes();
 
         return configuracao;
+    }
+
+    public ConfiguracaoOperacional? BuscarPorId(int id)
+    {
+        var listaConfiguracoes = ListarConfiguracoesUnidadeAsync(id);
+        return listaConfiguracoes.FirstOrDefault(c => c.Id == id);
+    }
+
+    public async Task<ConfiguracaoOperacional?> AtualizarConfiguracaoAsync(int id, AtualizarConfiguracaoRequest request)
+    {
+        var config = BuscarPorId(id);
+
+        if (config == null)
+        {
+            return null;
+        }
+
+        _nexaDbContext.ConfiguracoesOperacionais.Update(config);
+        await _nexaDbContext.SalvarAlteracoes();
+
+        return config;
+    }
+    public async Task<bool> ExcluirConfiguracaoAsync(int id)
+    {
+        var configuracao = BuscarPorId(id);
+
+        if(configuracao == null)
+        {
+            return false;
+        }
+
+        _nexaDbContext.ConfiguracoesOperacionais.Remove(configuracao);
+        await _nexaDbContext.SalvarAlteracoes();
+
+        return true;
     }
 }

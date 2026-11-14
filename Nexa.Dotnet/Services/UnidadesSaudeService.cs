@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Nexa.Dotnet.Data;
+﻿using Nexa.Dotnet.Data;
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Models;
 
@@ -16,7 +15,7 @@ public class UnidadesSaudeService
     public UnidadeSaudeGestao? BuscarPorId(int id)
     {
         var listaUnidades = ListarUnidadesAsync();
-        return listaUnidades.FirstOrDefault(p => p.Id == id);
+        return listaUnidades.FirstOrDefault(u => u.Id == id);
     }
 
     public ICollection<UnidadeSaudeGestao> ListarUnidadesAsync()
@@ -57,7 +56,7 @@ public class UnidadesSaudeService
         return unidade;
     }
 
-    public async Task<UnidadeSaudeGestao?> AtualizarUnidadeAsync(int id)
+    public async Task<UnidadeSaudeGestao?> AtualizarNomeUnidadeAsync(int id, AtualizarUnidadeRequest request)
     {
         var unidade = BuscarPorId(id);
 
@@ -65,6 +64,8 @@ public class UnidadesSaudeService
         {
             return null;
         }
+
+        unidade.NomeUnidade = request.NomeUnidade;
 
 
         _nexaDbContext.UnidadesSaude.Update(unidade);
@@ -73,7 +74,7 @@ public class UnidadesSaudeService
         return unidade;
     }
 
-    public async Task<UnidadeSaudeGestao?> ExcluirUnidadeAsync(int id)
+    public async Task<UnidadeSaudeGestao?> AtualizarStatusUnidadeAsync(int id, AtualizarUnidadeRequest request)
     {
         var unidade = BuscarPorId(id);
 
@@ -83,10 +84,56 @@ public class UnidadesSaudeService
         }
 
 
-        _nexaDbContext.UnidadesSaude.Remove(unidade);
+        unidade.Ativa = request.Ativa;
+
+
+        _nexaDbContext.UnidadesSaude.Update(unidade);
         await _nexaDbContext.SalvarAlteracoes();
 
         return unidade;
+    }
+
+    public async Task<UnidadeSaudeGestao?> AtualizarEnderecoUnidadeAsync(int id, AtualizarUnidadeRequest request)
+    {
+        var unidade = BuscarPorId(id);
+
+        if(unidade == null)
+        {
+            return null;
+        }
+
+
+        unidade.Endereco.Logradouro = request.Endereco.Logradouro;
+        unidade.Endereco.Numero = request.Endereco.Numero;
+        unidade.Endereco.Complemento = request.Endereco.Complemento;
+        unidade.Endereco.Bairro = request.Endereco.Bairro;
+        unidade.Endereco.Cidade = request.Endereco.Cidade;
+        unidade.Endereco.Estado = request.Endereco.Estado;
+        unidade.Endereco.Cep = request.Endereco.Cep;
+
+
+        _nexaDbContext.UnidadesSaude.Update(unidade);
+        await _nexaDbContext.SalvarAlteracoes();
+
+        return unidade;
+    }
+
+
+
+
+    public async Task<bool> ExcluirUnidadeAsync(int id)
+    {
+        var unidade = BuscarPorId(id);
+
+        if(unidade == null)
+        {
+            return false;
+        }
+
+        _nexaDbContext.UnidadesSaude.Remove(unidade);
+        await _nexaDbContext.SalvarAlteracoes();
+
+        return true;
     }
 
 }
