@@ -12,7 +12,6 @@ var stringConexao = builder.Configuration.GetConnectionString("OracleConnection"
 builder.Services.AddDbContext<NexaDbContext>(options => options.UseOracle(stringConexao));
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<UnidadesSaudeService>();
 builder.Services.AddScoped<ConfiguracaoOperacionalService>();
@@ -29,7 +28,6 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI(); // Disponível em: http://localhost:5000/swagger/index.html
 }
