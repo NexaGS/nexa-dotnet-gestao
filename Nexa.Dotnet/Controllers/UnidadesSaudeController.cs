@@ -2,7 +2,6 @@
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Models;
 using Nexa.Dotnet.Services;
-using System;
 
 namespace Nexa.Dotnet.Controllers;
 
@@ -18,7 +17,8 @@ public class UnidadesSaudeController : ControllerBase
 	}
 
 	[HttpGet]
-	public IActionResult ListarUnidades()
+    [ProducesResponseType(typeof(ICollection<UnidadeSaudeGestao>), StatusCodes.Status200OK)]
+    public IActionResult ListarUnidades()
 	{
 		return Ok(_unidadesSaudeService.ListarUnidadesAsync());
 	}
@@ -32,7 +32,7 @@ public class UnidadesSaudeController : ControllerBase
 
 		if(unidadeSaude == null)
 		{
-			return NotFound("Unidade de saúde não encontrada");
+			return NotFound(new {status = 404, mensagem = $"Não foi possível retornar unidade de saúde com ID: {id}" });
 		}
 
         return Ok(unidadeSaude);
@@ -43,23 +43,32 @@ public class UnidadesSaudeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult CriarUnidadeSaude([FromBody] CriarUnidadeRequest request)
 	{
-		return Created();
-	}
+		var unidade = _unidadesSaudeService.CriarUnidadeAsync(request);
+
+		if(unidade == null)
+		{
+            return BadRequest($"Não foi possível criar unidade de saúde");
+        }
+
+        return CreatedAtAction(nameof(UnidadeSaudeGestao), new { id = unidade.Id }, unidade);
+    }
 
 
 	[HttpPut("{id}")]
-	public IActionResult AtualizarUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
-	{
-		return Ok();
-	}
-
-
-	[HttpDelete("{id}")]
-	public IActionResult ExcluirUnidadeSaude(int id)
+    [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult AtualizarUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
 	{
 		return NoContent();
 	}
 
 
-	
+	[HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult ExcluirUnidadeSaude(int id)
+	{
+		return NoContent();
+	}
+
 }

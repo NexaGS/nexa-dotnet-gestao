@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Nexa.Dotnet.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Nexa.Dotnet.Models;
@@ -14,7 +15,7 @@ public class ConfiguracaoOperacional
     public int UnidadeSaudeId { get; set; }
 
     [Column("dia_semana")]
-    public DayOfWeek DiaSemana { get; set; }
+    public DiaDaSemana DiaSemana { get; set; }
 
     [Column("hora_abertura")]
     public TimeOnly HoraAbertura { get; set; }

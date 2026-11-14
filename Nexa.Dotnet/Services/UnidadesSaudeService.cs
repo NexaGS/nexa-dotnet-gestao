@@ -52,7 +52,7 @@ public class UnidadesSaudeService
         
 
         _nexaDbContext.UnidadesSaude.AddAsync(unidade);
-        await SalvarAlteracoes();
+        await _nexaDbContext.SalvarAlteracoes();
 
         return unidade;
     }
@@ -68,7 +68,7 @@ public class UnidadesSaudeService
 
 
         _nexaDbContext.UnidadesSaude.Update(unidade);
-        await SalvarAlteracoes();
+        await _nexaDbContext.SalvarAlteracoes();
 
         return unidade;
     }
@@ -84,10 +84,9 @@ public class UnidadesSaudeService
 
 
         _nexaDbContext.UnidadesSaude.Remove(unidade);
-        await SalvarAlteracoes();
+        await _nexaDbContext.SalvarAlteracoes();
 
         return unidade;
     }
 
-    private Task SalvarAlteracoes() => _nexaDbContext.SaveChangesAsync();
 }
