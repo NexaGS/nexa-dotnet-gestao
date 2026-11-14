@@ -56,7 +56,7 @@ public class UnidadesSaudeService
         return unidade;
     }
 
-    public async Task<UnidadeSaudeGestao?> AtualizarNomeUnidadeAsync(int id, AtualizarUnidadeRequest request)
+    public async Task<UnidadeSaudeGestao?> AtualizarNomeUnidadeAsync(int id, string nome)
     {
         var unidade = BuscarPorId(id);
 
@@ -65,7 +65,7 @@ public class UnidadesSaudeService
             return null;
         }
 
-        unidade.NomeUnidade = request.NomeUnidade;
+        unidade.NomeUnidade = nome;
 
 
         _nexaDbContext.UnidadesSaude.Update(unidade);
@@ -74,7 +74,7 @@ public class UnidadesSaudeService
         return unidade;
     }
 
-    public async Task<UnidadeSaudeGestao?> AtualizarStatusUnidadeAsync(int id, AtualizarUnidadeRequest request)
+    public async Task<UnidadeSaudeGestao?> TornarStatusAtivoUnidadeAsync(int id)
     {
         var unidade = BuscarPorId(id);
 
@@ -83,9 +83,23 @@ public class UnidadesSaudeService
             return null;
         }
 
+        unidade.Ativa = true;
 
-        unidade.Ativa = request.Ativa;
+        _nexaDbContext.UnidadesSaude.Update(unidade);
+        await _nexaDbContext.SalvarAlteracoes();
 
+        return unidade;
+    }
+    public async Task<UnidadeSaudeGestao?> TornarStatusInativoUnidadeAsync(int id)
+    {
+        var unidade = BuscarPorId(id);
+
+        if(unidade == null)
+        {
+            return null;
+        }
+
+        unidade.Ativa = false;
 
         _nexaDbContext.UnidadesSaude.Update(unidade);
         await _nexaDbContext.SalvarAlteracoes();
@@ -93,7 +107,7 @@ public class UnidadesSaudeService
         return unidade;
     }
 
-    public async Task<UnidadeSaudeGestao?> AtualizarEnderecoUnidadeAsync(int id, AtualizarUnidadeRequest request)
+    public async Task<UnidadeSaudeGestao?> AtualizarEnderecoUnidadeAsync(int id, EnderecoDto request)
     {
         var unidade = BuscarPorId(id);
 
@@ -103,13 +117,13 @@ public class UnidadesSaudeService
         }
 
 
-        unidade.Endereco.Logradouro = request.Endereco.Logradouro;
-        unidade.Endereco.Numero = request.Endereco.Numero;
-        unidade.Endereco.Complemento = request.Endereco.Complemento;
-        unidade.Endereco.Bairro = request.Endereco.Bairro;
-        unidade.Endereco.Cidade = request.Endereco.Cidade;
-        unidade.Endereco.Estado = request.Endereco.Estado;
-        unidade.Endereco.Cep = request.Endereco.Cep;
+        unidade.Endereco.Logradouro = request.Logradouro;
+        unidade.Endereco.Numero = request.Numero;
+        unidade.Endereco.Complemento = request.Complemento;
+        unidade.Endereco.Bairro = request.Bairro;
+        unidade.Endereco.Cidade = request.Cidade;
+        unidade.Endereco.Estado = request.Estado;
+        unidade.Endereco.Cep = request.Cep;
 
 
         _nexaDbContext.UnidadesSaude.Update(unidade);

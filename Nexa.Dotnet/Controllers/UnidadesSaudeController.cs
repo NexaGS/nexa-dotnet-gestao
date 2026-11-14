@@ -2,6 +2,7 @@
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Models;
 using Nexa.Dotnet.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nexa.Dotnet.Controllers;
 
@@ -57,9 +58,9 @@ public class UnidadesSaudeController : ControllerBase
 	[HttpPut("{id}/nome")]
     [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AtualizarNomeUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
+    public async Task<IActionResult> AtualizarNomeUnidadeSaude([Required] int id, string nome)
 	{
-        var unidadeAtualizada = await _unidadesSaudeService.AtualizarNomeUnidadeAsync(id, request);
+        var unidadeAtualizada = await _unidadesSaudeService.AtualizarNomeUnidadeAsync(id, nome);
 
 		if(unidadeAtualizada == null)
 		{
@@ -69,13 +70,28 @@ public class UnidadesSaudeController : ControllerBase
         return NoContent();
 	}
 
-	[HttpPut("{id}/statusAtividade")]
+	[HttpPut("{id}/ativar-unidade")]
     [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AtualizarStatusUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
+    public async Task<IActionResult> AtivarUnidadeSaude(int id)
 	{
-        var unidadeAtualizada = await _unidadesSaudeService.AtualizarStatusUnidadeAsync(id, request);
+        var unidadeAtualizada = await _unidadesSaudeService.TornarStatusAtivoUnidadeAsync(id);
+		
+		if(unidadeAtualizada == null)
+		{
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
+        }
 
+        return NoContent();
+	}
+
+	[HttpPut("{id}/desativar-unidade")]
+    [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> InativarUnidadeSaude(int id)
+	{
+        var unidadeAtualizada = await _unidadesSaudeService.TornarStatusInativoUnidadeAsync(id);
+		
 		if(unidadeAtualizada == null)
 		{
             return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
@@ -87,7 +103,7 @@ public class UnidadesSaudeController : ControllerBase
 	[HttpPut("{id}/endereco")]
     [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> AtualizarEnderecoUnidadeSaude(int id, [FromBody] AtualizarUnidadeRequest request)
+    public async Task<IActionResult> AtualizarEnderecoUnidadeSaude(int id, [FromBody] EnderecoDto request)
 	{
         var unidadeAtualizada = await _unidadesSaudeService.AtualizarEnderecoUnidadeAsync(id, request);
 

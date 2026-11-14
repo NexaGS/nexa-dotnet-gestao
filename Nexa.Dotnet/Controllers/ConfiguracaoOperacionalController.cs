@@ -66,6 +66,12 @@ public class ConfiguracaoOperacionalController : ControllerBase
     public async Task<IActionResult> ExcluirConfiguracao(int id)
     {
         var configuracao = await _configuracaoOperacionalService.ExcluirConfiguracaoAsync(id);
+
+        if(!configuracao)
+        {
+            return NotFound(new { status = 404, mensagem = $"Configuração operacional com {id} não encontrada para exclusão." });
+        }
+
         return NoContent();
     }
 }
