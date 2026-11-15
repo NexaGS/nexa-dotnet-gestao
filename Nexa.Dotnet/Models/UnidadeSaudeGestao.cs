@@ -20,7 +20,7 @@ public class UnidadeSaudeGestao
     [Column("codigo_cnes_unidade")]
     public string CodigoCnes { get; set; } = string.Empty;
 
-    [Column("ativa")]
+    [Column("ativa", TypeName = "NUMBER(1)")]
     public bool Ativa { get; set; } = true;
     public Endereco Endereco { get; set; } = new();
     public ICollection<ConfiguracaoOperacional> Configuracoes { get; set; } = new List<ConfiguracaoOperacional>();

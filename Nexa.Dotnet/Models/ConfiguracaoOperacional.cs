@@ -29,7 +29,7 @@ public class ConfiguracaoOperacional
     [Column("tempo_medio_minutos")]
     public int TempoMedioAtendimentoMinutos { get; set; }
 
-    [Column("configuracao_ativa")]
+    [Column("configuracao_ativa", TypeName = "NUMBER(1)")]
     public bool ConfiguracaoAtiva { get; set; } = true;
 
     [ForeignKey("UnidadeSaudeId")]
