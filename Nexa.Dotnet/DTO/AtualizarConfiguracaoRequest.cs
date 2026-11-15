@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Nexa.Dotnet.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nexa.Dotnet.DTOs;
 
@@ -6,7 +7,7 @@ public class AtualizarConfiguracaoRequest
 {
     [Required(ErrorMessage = "O dia da semana é obrigatório.")]
     [Range(0, 6, ErrorMessage = "Dia da semana deve ser entre 0 (Domingo) e 6 (Sábado).")]
-    public DayOfWeek DiaSemana { get; set; }
+    public DiaDaSemana DiaSemana { get; set; }
 
     [Required(ErrorMessage = "A hora de abertura é obrigatória.")]
     public TimeOnly HoraAbertura { get; set; }

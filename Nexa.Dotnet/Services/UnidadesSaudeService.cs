@@ -8,7 +8,7 @@ namespace Nexa.Dotnet.Services;
 public class UnidadesSaudeService
 {
 	private readonly NexaDbContext _nexaDbContext;
-    private NotificationContext _notificationContext;
+    private readonly NotificationContext _notificationContext;
 	public UnidadesSaudeService(NexaDbContext nexaDbContext, NotificationContext notificationContext)
 	{
 		_nexaDbContext = nexaDbContext;

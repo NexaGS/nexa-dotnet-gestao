@@ -12,20 +12,14 @@ namespace Nexa.Dotnet.Controllers;
 [Route("api/configuracoes-operacionais")]
 public class ConfiguracaoOperacionalController : ControllerBase
 {
-    private ConfiguracaoOperacionalService _configuracaoOperacionalService;
-    private NotificationContext _notificationContext;
+    private readonly ConfiguracaoOperacionalService _configuracaoOperacionalService;
+    private readonly NotificationContext _notificationContext;
 
     public ConfiguracaoOperacionalController(ConfiguracaoOperacionalService configuracaoOperacionalService, NotificationContext notificationContext)
     {
         _configuracaoOperacionalService = configuracaoOperacionalService;
         _notificationContext = notificationContext;
     }
-
-    //[HttpGet]
-    //public IActionResult ListarConfiguracoesUnidades()
-    //{
-    //    return Ok();
-    //}
 
     [HttpGet("{unidadeId}")]
     [ProducesResponseType(typeof(ConfiguracaoOperacional), StatusCodes.Status200OK)]
@@ -46,7 +40,7 @@ public class ConfiguracaoOperacionalController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegistrarConfiguracao([FromBody] CriarConfiguracaoRequest request)
     {
-        var configuracao = _configuracaoOperacionalService.CriarConfiguracaoAsync(request);
+        var configuracao = await _configuracaoOperacionalService.CriarConfiguracaoAsync(request);
         if(configuracao == null)
         {
             return BadRequest($"Não foi possível criar nova configuração");

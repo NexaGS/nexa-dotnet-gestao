@@ -90,7 +90,7 @@ public class ConfiguracaoOperacionalService
             return null;
         }
 
-        //config.DiaSemana = request.DiaSemana;
+        config.DiaSemana = request.DiaSemana;
         config.HoraAbertura = request.HoraAbertura;
         config.HoraFechamento = request.HoraFechamento;
         config.CapacidadeDiaria = request.CapacidadeDiaria;

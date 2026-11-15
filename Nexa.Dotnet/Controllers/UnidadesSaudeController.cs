@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Models;
+using Nexa.Dotnet.Notifications;
 using Nexa.Dotnet.Services;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,10 +12,12 @@ namespace Nexa.Dotnet.Controllers;
 public class UnidadesSaudeController : ControllerBase
 {
 	private readonly UnidadesSaudeService _unidadesSaudeService;
+    private readonly NotificationContext _notificationContext;
 
-	public UnidadesSaudeController(UnidadesSaudeService unidadesSaudeService)
+    public UnidadesSaudeController(UnidadesSaudeService unidadesSaudeService, NotificationContext notificationContext)
 	{
 		_unidadesSaudeService = unidadesSaudeService;
+		_notificationContext = notificationContext;
 	}
 
 	[HttpGet]
@@ -44,7 +47,7 @@ public class UnidadesSaudeController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CriarUnidadeSaude([FromBody] CriarUnidadeRequest request)
 	{
-		var unidade = _unidadesSaudeService.CriarUnidadeAsync(request);
+		var unidade = await _unidadesSaudeService.CriarUnidadeAsync(request);
 
 		if(unidade == null)
 		{
@@ -79,7 +82,7 @@ public class UnidadesSaudeController : ControllerBase
 		
 		if(unidadeAtualizada == null)
 		{
-            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com ID {id} não encontrada para atualização." });
+            return NotFound(new { status = 400, erros = _notificationContext.notifications });
         }
 
         return NoContent();
@@ -94,7 +97,7 @@ public class UnidadesSaudeController : ControllerBase
 		
 		if(unidadeAtualizada == null)
 		{
-            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com ID {id} não encontrada para atualização." });
+            return NotFound(new { status = 404, erros = _notificationContext.notifications });
         }
 
         return NoContent();
