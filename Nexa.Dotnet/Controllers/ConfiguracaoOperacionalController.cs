@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Models;
+using Nexa.Dotnet.Notifications;
 using Nexa.Dotnet.Services;
 using System;
 
@@ -11,10 +13,12 @@ namespace Nexa.Dotnet.Controllers;
 public class ConfiguracaoOperacionalController : ControllerBase
 {
     private ConfiguracaoOperacionalService _configuracaoOperacionalService;
+    private NotificationContext _notificationContext;
 
-    public ConfiguracaoOperacionalController(ConfiguracaoOperacionalService configuracaoOperacionalService)
+    public ConfiguracaoOperacionalController(ConfiguracaoOperacionalService configuracaoOperacionalService, NotificationContext notificationContext)
     {
         _configuracaoOperacionalService = configuracaoOperacionalService;
+        _notificationContext = notificationContext;
     }
 
     //[HttpGet]
@@ -47,6 +51,7 @@ public class ConfiguracaoOperacionalController : ControllerBase
         {
             return BadRequest($"Não foi possível criar nova configuração");
         }
+
         return CreatedAtAction(nameof(BuscarConfiguracoesUnidade), new {id = configuracao.Id}, configuracao);
     }
 
@@ -56,6 +61,18 @@ public class ConfiguracaoOperacionalController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AtualizarConfiguracoes(int id, [FromBody] AtualizarConfiguracaoRequest request)
     {
+        var configuracao = await _configuracaoOperacionalService.AtualizarConfiguracaoAsync(id, request);
+
+        if (_notificationContext.HasNotifications)
+        {
+            return BadRequest(new { status = 400, erros = _notificationContext.notifications });
+        }
+
+        if (configuracao == null)
+        {
+            return NotFound(new { status = 404, mensagem = $"Configuração operacional com ID {id} não encontrada para exclusão." });
+        }
+
         return NoContent();
     }
 
@@ -69,7 +86,7 @@ public class ConfiguracaoOperacionalController : ControllerBase
 
         if(!configuracao)
         {
-            return NotFound(new { status = 404, mensagem = $"Configuração operacional com {id} não encontrada para exclusão." });
+            return NotFound(new { status = 404, mensagem = $"Configuração operacional com ID {id} não encontrada para exclusão." });
         }
 
         return NoContent();

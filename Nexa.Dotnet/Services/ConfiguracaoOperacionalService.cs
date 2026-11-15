@@ -38,11 +38,11 @@ public class ConfiguracaoOperacionalService
             _notificationContext.AddNotification("Capacidade diária da unidade deve ser maior que 0.");
         }
 
-        if (unidadeSaude == null)
+        if (_notificationContext.HasNotifications)
         {
-            _notificationContext.AddNotification("Unidade de saúde não encontrada");
             return null;
         }
+
 
         var configuracao = new ConfiguracaoOperacional
         {
@@ -55,11 +55,6 @@ public class ConfiguracaoOperacionalService
             ConfiguracaoAtiva = request.ConfiguracaoAtiva,
             UnidadeSaude = unidadeSaude
         };
-
-        if (_notificationContext.HasNotifications)
-        {
-            return null;
-        }
 
         _nexaDbContext.ConfiguracoesOperacionais.AddAsync(configuracao);
         await _nexaDbContext.SalvarAlteracoes();
@@ -81,6 +76,28 @@ public class ConfiguracaoOperacionalService
         {
             return null;
         }
+
+        if (request.HoraAbertura >= request.HoraFechamento)
+        {
+            _notificationContext.AddNotification("Hora da abertura deve ser anterior a hora de fechamento.");
+        }
+
+        if (request.CapacidadeDiaria <= 0)
+        {
+            _notificationContext.AddNotification("Capacidade diária da unidade deve ser maior que 0.");
+        }
+
+        if (_notificationContext.HasNotifications)
+        {
+            return null;
+        }
+
+        //config.DiaSemana = request.DiaSemana;
+        config.HoraAbertura = request.HoraAbertura;
+        config.HoraFechamento = request.HoraFechamento;
+        config.CapacidadeDiaria = request.CapacidadeDiaria;
+        config.TempoMedioAtendimentoMinutos = request.TempoMedioAtendimentoMinutos;
+        config.ConfiguracaoAtiva = request.ConfiguracaoAtiva;
 
         _nexaDbContext.ConfiguracoesOperacionais.Update(config);
         await _nexaDbContext.SalvarAlteracoes();

@@ -64,7 +64,7 @@ public class UnidadesSaudeController : ControllerBase
 
 		if(unidadeAtualizada == null)
 		{
-            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com ID {id} não encontrada para atualização." });
         }
 
         return NoContent();
@@ -79,7 +79,7 @@ public class UnidadesSaudeController : ControllerBase
 		
 		if(unidadeAtualizada == null)
 		{
-            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com ID {id} não encontrada para atualização." });
         }
 
         return NoContent();
@@ -94,7 +94,7 @@ public class UnidadesSaudeController : ControllerBase
 		
 		if(unidadeAtualizada == null)
 		{
-            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com ID {id} não encontrada para atualização." });
         }
 
         return NoContent();
@@ -109,7 +109,7 @@ public class UnidadesSaudeController : ControllerBase
 
 		if(unidadeAtualizada == null)
 		{
-            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada para atualização." });
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com ID {id} não encontrada para atualização." });
         }
 
         return NoContent();
@@ -126,7 +126,7 @@ public class UnidadesSaudeController : ControllerBase
 
 		if (!unidade)
 		{
-            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com {id} não encontrada." });
+            return NotFound(new { status = 404, mensagem = $"Unidade de saúde com ID {id} não encontrada." });
         }
 
 		return NoContent();

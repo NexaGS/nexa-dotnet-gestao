@@ -1,15 +1,18 @@
 ﻿using Nexa.Dotnet.Data;
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Models;
+using Nexa.Dotnet.Notifications;
 
 namespace Nexa.Dotnet.Services;
 
 public class UnidadesSaudeService
 {
 	private readonly NexaDbContext _nexaDbContext;
-	public UnidadesSaudeService(NexaDbContext nexaDbContext)
+    private NotificationContext _notificationContext;
+	public UnidadesSaudeService(NexaDbContext nexaDbContext, NotificationContext notificationContext)
 	{
 		_nexaDbContext = nexaDbContext;
+        _notificationContext = notificationContext;
 	}
 
     public UnidadeSaudeGestao? BuscarPorId(int id)
@@ -83,6 +86,12 @@ public class UnidadesSaudeService
             return null;
         }
 
+        if (unidade.Ativa == true)
+        {
+            _notificationContext.AddNotification("Unidade de saúde já está ativa!");
+            return null;
+        }
+
         unidade.Ativa = true;
 
         _nexaDbContext.UnidadesSaude.Update(unidade);
@@ -98,6 +107,13 @@ public class UnidadesSaudeService
         {
             return null;
         }
+
+        if(unidade.Ativa == false)
+        {
+            _notificationContext.AddNotification("Unidade de saúde já está inativa!");
+            return null;
+        }
+
 
         unidade.Ativa = false;
 
@@ -131,9 +147,6 @@ public class UnidadesSaudeService
 
         return unidade;
     }
-
-
-
 
     public async Task<bool> ExcluirUnidadeAsync(int id)
     {
