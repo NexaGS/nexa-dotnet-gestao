@@ -46,7 +46,7 @@ public class ConfiguracaoOperacionalController : ControllerBase
             return BadRequest($"Não foi possível criar nova configuração");
         }
 
-        return CreatedAtAction(nameof(BuscarConfiguracoesUnidade), new {id = configuracao.Id}, configuracao);
+        return CreatedAtAction(nameof(BuscarConfiguracoesUnidade), new {unidadeId = configuracao.UnidadeSaudeId}, configuracao);
     }
 
 

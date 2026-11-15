@@ -79,10 +79,15 @@ public class UnidadesSaudeController : ControllerBase
     public async Task<IActionResult> AtivarUnidadeSaude(int id)
 	{
         var unidadeAtualizada = await _unidadesSaudeService.TornarStatusAtivoUnidadeAsync(id);
-		
-		if(unidadeAtualizada == null)
+
+        if (_notificationContext.HasNotifications)
+        {
+            return BadRequest(new { status = 400, erros = _notificationContext.notifications });
+        }
+
+        if (unidadeAtualizada == null)
 		{
-            return NotFound(new { status = 400, erros = _notificationContext.notifications });
+            return NotFound(new { status = 404, mensagem = "Unidade de saúde com ID {id} não encontrada para atualização." });
         }
 
         return NoContent();
@@ -94,10 +99,15 @@ public class UnidadesSaudeController : ControllerBase
     public async Task<IActionResult> InativarUnidadeSaude(int id)
 	{
         var unidadeAtualizada = await _unidadesSaudeService.TornarStatusInativoUnidadeAsync(id);
-		
-		if(unidadeAtualizada == null)
+
+        if (_notificationContext.HasNotifications)
+        {
+            return BadRequest(new { status = 400, erros = _notificationContext.notifications });
+        }
+
+        if (unidadeAtualizada == null)
 		{
-            return NotFound(new { status = 404, erros = _notificationContext.notifications });
+            return NotFound(new { status = 404, mensagem = "Unidade de saúde com ID {id} não encontrada para atualização." });
         }
 
         return NoContent();
