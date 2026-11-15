@@ -168,24 +168,31 @@ Abaixo estão todos os contratos e corpos JSON para testar diretamente pelo **Sw
 * **Rota:** `GET /api/unidades-saude/1`
 * **Status Esperado:** `200 OK` (se existir) ou `404 Not Found` (se inexistente)
 
-#### 🔹 [PUT] Atualizar Unidade de Saúde
-* **Rota:** `PUT /api/unidades-saude/1`
+#### 🔹 [PUT] Atualizar Nome da Unidade
+* **Rota:** `PUT /api/unidades-saude/1/nome?nome=UBS Vila Mariana - Unidade Central Ampliada`
+* **Status Esperado:** `204 NoContent`
+
+#### 🔹 [PUT] Ativar Unidade de Saúde
+* **Rota:** `PUT /api/unidades-saude/1/ativar-unidade`
+* **Status Esperado:** `204 NoContent` (se já estiver ativa, retorna `400 Bad Request`)
+
+#### 🔹 [PUT] Desativar Unidade de Saúde
+* **Rota:** `PUT /api/unidades-saude/1/desativar-unidade`
+* **Status Esperado:** `204 NoContent` (se já estiver inativa, retorna `400 Bad Request`)
+
+#### 🔹 [PUT] Atualizar Endereço da Unidade
+* **Rota:** `PUT /api/unidades-saude/1/endereco`
 * **Status Esperado:** `204 NoContent`
 * **Body (JSON):**
 ```json
 {
-  "nomeUnidade": "UBS Vila Mariana - Unidade Central Ampliada",
-  "codigoCnes": "2078015",
-  "ativa": true,
-  "endereco": {
-    "logradouro": "Rua Domingos de Morais",
-    "numero": "802",
-    "complemento": "Térreo",
-    "bairro": "Vila Mariana",
-    "cidade": "São Paulo",
-    "estado": "SP",
-    "cep": "04010000"
-  }
+  "logradouro": "Rua Domingos de Morais",
+  "numero": "802",
+  "complemento": "Térreo",
+  "bairro": "Vila Mariana",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "cep": "04010000"
 }
 ```
 

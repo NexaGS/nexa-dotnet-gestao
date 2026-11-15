@@ -2,206 +2,165 @@
 **Projeto:** Nexa (CitizenTech) — Global Solution 2026/2  
 **Disciplina:** Advanced Business Development with .NET (FIAP)  
 **Papéis:** Product Owner (P.O.) | Tech Lead | Quality Assurance (QA)  
-**Data da Última Atualização:** 14/11/2026 (Status: Pausa Estratégica Pré-Conclusão)  
-**Status Geral:** 🟢 Fase de Arremate Final — ~95% Concluído  
+**Data da Última Atualização:** 15/11/2026  
+**Status Geral:** 🟢 Reta Finalíssima — ~98% Concluído  
 
 ---
 
-## ⏱️ 1. Estimativa de Tempo de Conclusão Restante
+## ⏱️ 1. Estimativa de Tempo Restante para Conclusão Total
 
-Com os endpoints de atualização da unidade já segregados e versionados no GitHub, o tempo de conclusão restante foi reduzido para um único ciclo rápido de arremate:
+Com os commits mais recentes (`b2dbf19` e `a3cc1c2`), você fechou a implementação dos endpoints de atualização, exclusão e regras operacionais. Restam apenas pequenos ajustes pontuais de chamada assíncrona/busca e a execução das migrations no banco:
 
-> ### ⏳ Tempo Restante Estimado para Conclusão Total: **~30 a 45 minutos**
+> ### ⏳ Tempo Restante Estimado: **~25 a 35 minutos (< 0.5 hora de trabalho)**
 
 ```mermaid
 gantt
-    title Arremate Final do MVP Nexa .NET
+    title Reta Final do MVP Nexa .NET
     dateFormat  HH:mm
     axisFormat  %H:%M
     
-    section Arremates Finais
-    Ajuste DTOs nos 3 PUTs de Unidade    :done1, 00:00, 15m
-    PUT e DELETE de Configuração         :done2, after done1, 15m
-    Migrations no Oracle Local (Update)  :done3, after done2, 15m
+    section Ajustes Finais & QA
+    Ajustes pontuais (await e BuscarPorId) :done1, 00:00, 10m
+    Execução da Migration no Oracle       :done2, after done1, 10m
+    Bateria de Testes no Swagger UI      :done3, after done2, 10m
 ```
 
-| Etapa Restante | O que falta fazer | Tempo Estimado |
+| Etapa Restante | O que fazer | Tempo Estimado |
 | :--- | :--- | :---: |
-| **1. Ajuste de DTOs nos 3 PUTs** | Alinhar os tipos de entrada em `/nome`, `/statusAtividade` e `/endereco` | **10 a 15 min** |
-| **2. PUT & DELETE de Configurações** | Implementar `AtualizarConfiguracaoAsync` e conectar o `DELETE` na Controller | **10 a 15 min** |
-| **3. Migrations no Oracle** | Rodar `dotnet ef migrations add InitialCreate` e `dotnet ef database update` | **10 a 15 min** |
+| **1. Ajustes Pontuais de QA** | Inserir `await` em 2 chamadas, corrigir `BuscarPorId` na service e tipo de enum no DTO | **10 min** |
+| **2. Migrations no Oracle** | Executar `dotnet ef migrations add InitialCreate` e `dotnet ef database update` | **10 min** |
+| **3. Validação no Swagger** | Executar o fluxo completo (POST -> GET -> PUT -> DELETE + 400/404) | **10 min** |
 
 ---
 
-## 🏆 2. O Que Já Temos de Excelente e Construído
+## 🏆 2. O Que Já Está Pronto e Construído (98%)
 
-O repositório no GitHub já conta com:
-1. **Segregação Cirúrgica de Endpoints de Atualização:**
-   * A unidade não força um payload monolítico para mudar um simples campo. Você dividiu em rotas expressivas: `/nome`, `/statusAtividade` e `/endereco`.
-2. **Notification Pattern Nativo:**
-   * `NotificationContext.cs` e `Notification.cs` desacoplados, interceptando inconsistências de domínio sem derrubar a API com exceptions.
-3. **Enum Inteligente com Serialização em Texto:**
-   * `DiaDaSemana` usa `[JsonConverter(typeof(JsonStringEnumConverter))]`, garantindo dropdown amigável no Swagger (`"Segunda"`, `"Terca"`) e persistência performática como número no Oracle.
-4. **Mapeamento com Data Annotations & DbContext Minimalista:**
-   * Entidades anotadas (`[Table]`, `[Column]`, `[Key]`) e `Endereco` como Value Object (`[Owned]`).
-5. **Segurança de Credenciais:**
-   * `dotnet user-secrets` configurado, mantendo senhas fora do Git.
-6. **Swagger UI Interativo Ativo:**
-   * Configuração de `UseSwagger()` e `UseSwaggerUI()` pronta para testes no navegador.
-7. **Documentação de Entrega no `README.md`:**
-   * Tabela de endpoints e todos os payloads JSON prontos para a banca da FIAP.
+1. **CRUD Completo de Unidades de Saúde:**
+   * `GET /api/unidades-saude` (200 OK)
+   * `GET /api/unidades-saude/{id}` (200 OK / 404 NotFound com JSON)
+   * `POST /api/unidades-saude` (201 Created com header Location)
+   * `DELETE /api/unidades-saude/{id}` (204 NoContent / 404 NotFound)
+2. **Atualização Segregada e Semântica de Unidades:**
+   * `PUT /api/unidades-saude/{id}/nome` (atualiza nome de forma cirúrgica)
+   * `PUT /api/unidades-saude/{id}/ativar-unidade` (ativação instantânea sem body)
+   * `PUT /api/unidades-saude/{id}/desativar-unidade` (inativação instantânea sem body)
+   * `PUT /api/unidades-saude/{id}/endereco` (recebe apenas `EnderecoDto`)
+3. **CRUD Completo de Configurações Operacionais:**
+   * `GET /api/configuracoes-operacionais/{unidadeId}`
+   * `POST /api/configuracoes-operacionais` (com validações de horário e capacidade)
+   * `PUT /api/configuracoes-operacionais/{id}` (atualização de regras operacionais)
+   * `DELETE /api/configuracoes-operacionais/{id}` (remoção de regra)
+4. **Notification Pattern Nativo:**
+   * `NotificationContext` acumulando mensagens de erro de regras de negócio sem throw de exceptions.
+5. **Persistência & Segurança:**
+   * `NexaDbContext` mapeado via Data Annotations e `dotnet user-secrets` pronto para o Oracle.
 
 ---
 
-## 🎯 3. As Melhores Opções para Entrada de Status (`Ativa: true / false`)
+## 💡 3. A Flag de Ativação/Inativação (`Ativa: true / false`)
 
-Você perguntou: *"qual a melhor entrada para status de uma unidade que está ativa ou não?"*
+### Por que essa abordagem é excelente para a arquitetura?
+1. **Preservação de Integridade Histórica (Soft Delete):**
+   * Em sistemas de saúde, uma unidade nunca deve ser fisicamente excluída se já realizou atendimentos (ou se o Spring Boot tem senhas/filas vinculadas a ela). O uso da flag `Ativa` permite desativar a unidade para novas consultas sem quebrar o histórico de dados.
+2. **Simplicidade Operacional Semântica:**
+   * Ao criar `/ativar-unidade` e `/desativar-unidade`, a API opera no estilo REST Semântico (RPC-action sobre recurso). O gestor não precisa enviar um JSON gigante nem corre o risco de sobrescrever o endereço da unidade só para colocá-la em manutenção.
+3. **Mapeamento Transparente no Oracle:**
+   * Mapeada com `[Column("ativa")] public bool Ativa { get; set; } = true;`, o Oracle persiste como `NUMBER(1)` (1 para true, 0 para false), nativo e ultra performático.
 
-Aqui estão as duas abordagens recomendadas pela arquitetura REST:
+---
 
-### Opção 1: DTO Específico (Mais Flexível e Padrão REST de Mercado)
-Crie um DTO enxuto:
-```csharp
-namespace Nexa.Dotnet.DTOs;
+## 🔍 4. Diagnóstico de QA / Tech Lead: 4 Pontos de Ajuste Rápido
 
-public class AtualizarStatusUnidadeRequest
-{
-    public bool Ativa { get; set; }
-}
-```
-* **Na Controller (`UnidadesSaudeController.cs`):**
+Antes de rodar a migration e testar no Swagger, revise estes 4 detalhes no seu código:
+
+### 1. ⚠️ Bug no `BuscarPorId` do `ConfiguracaoOperacionalService.cs` (Crítico)
+* **Como está:**
   ```csharp
-  [HttpPut("{id:int}/status")]
-  [ProducesResponseType(StatusCodes.Status204NoContent)]
-  [ProducesResponseType(StatusCodes.Status404NotFound)]
-  public async Task<IActionResult> AtualizarStatusUnidadeSaude(int id, [FromBody] AtualizarStatusUnidadeRequest request)
+  public ConfiguracaoOperacional? BuscarPorId(int id)
   {
-      var unidade = await _unidadesSaudeService.AtualizarStatusUnidadeAsync(id, request.Ativa);
-      if (unidade == null)
-          return NotFound(new { status = 404, mensagem = $"Unidade {id} não encontrada." });
-
-      return NoContent();
+      var listaConfiguracoes = ListarConfiguracoesUnidadeAsync(id);
+      return listaConfiguracoes.FirstOrDefault(c => c.Id == id);
   }
   ```
-* **Na Service (`UnidadesSaudeService.cs`):**
+  *Problema:* `ListarConfiguracoesUnidadeAsync(id)` busca por `UnidadeSaudeId == id`. Se a configuração tiver `Id = 3` e pertencer à unidade 1, ela nunca será encontrada, gerando 404 falso no PUT e DELETE.
+* **Correção simples:**
   ```csharp
-  public async Task<UnidadeSaudeGestao?> AtualizarStatusUnidadeAsync(int id, bool ativa)
+  public ConfiguracaoOperacional? BuscarPorId(int id)
   {
-      var unidade = BuscarPorId(id);
-      if (unidade == null) return null;
-
-      unidade.Ativa = ativa;
-      _nexaDbContext.UnidadesSaude.Update(unidade);
-      await SalvarAlteracoes();
-
-      return unidade;
+      return _nexaDbContext.ConfiguracoesOperacionais.FirstOrDefault(c => c.Id == id);
   }
   ```
-* **Payload no Swagger:** `{"ativa": true}` ou `{"ativa": false}`. Super intuitivo!
 
 ---
 
-### Opção 2: Endpoints de Ação Semântica (Zero Payload no Body)
-Muitas equipes preferem essa abordagem porque o gestor só clica em `Execute` no Swagger sem precisar digitar JSON nenhum:
-* `PUT /api/unidades-saude/{id}/ativar` -> define `unidade.Ativa = true;`
-* `PUT /api/unidades-saude/{id}/inativar` -> define `unidade.Ativa = false;`
-
-> **Recomendação:** A **Opção 1** (com DTO `AtualizarStatusUnidadeRequest`) ou a **Opção 2** são muito superiores a receber `string ativa` (evita parsing manual de "ATIVA" / "INATIVA").
-
----
-
-## 🔧 4. Alinhamento de Tipos nos 3 Endpoints de Atualização
-
-Atualmente no seu código há uma pequena divergência de tipos entre a Controller e a Service que você poderá alinhar rapidamente quando voltar:
-
-| Endpoint | O que a Controller envia | O que a Service espera | Como Alinhar |
-| :--- | :--- | :--- | :--- |
-| **`PUT /{id}/nome`** | `AtualizarUnidadeRequest` | `AtualizarUnidadeRequest` | Crie um DTO específico `AtualizarNomeUnidadeRequest` (contendo apenas `string NomeUnidade`) para não precisar enviar endereço junto. |
-| **`PUT /{id}/statusAtividade`** | `AtualizarUnidadeRequest` | `string ativa` | Alinhe para receber `AtualizarStatusUnidadeRequest` (com `bool Ativa`). |
-| **`PUT /{id}/endereco`** | `AtualizarUnidadeRequest` | `EnderecoDto request` | Na Controller, mude o parâmetro para `[FromBody] EnderecoDto request`. Assim o Swagger pede apenas os dados de endereço! |
+### 2. ⚠️ Falta de `await` na criação das Controllers
+* **No `UnidadesSaudeController.cs` (Linha 47):**
+  ```csharp
+  // Atual:
+  var unidade = _unidadesSaudeService.CriarUnidadeAsync(request);
+  // Correção: adicione o await para obter a entidade real e não a Task
+  var unidade = await _unidadesSaudeService.CriarUnidadeAsync(request);
+  ```
+* **No `ConfiguracaoOperacionalController.cs` (Linha 49):**
+  ```csharp
+  // Atual:
+  var configuracao = _configuracaoOperacionalService.CriarConfiguracaoAsync(request);
+  // Correção: adicione o await
+  var configuracao = await _configuracaoOperacionalService.CriarConfiguracaoAsync(request);
+  ```
 
 ---
 
-## 📋 5. O Arremate Final de `ConfiguracaoOperacional` (PUT e DELETE)
-
-Para fechar o CRUD de configurações quando você retornar:
-
-### A. No `ConfiguracaoOperacionalService.cs`:
-Implementar o método de atualização:
+### 3. ⚠️ Validação de Notificação ao Ativar/Inativar Unidade
+Na service, você colocou:
 ```csharp
-public async Task<ConfiguracaoOperacional?> AtualizarConfiguracaoAsync(int id, AtualizarConfiguracaoRequest request)
+if (unidade.Ativa == true)
 {
-    var configuracao = BuscarPorId(id);
-    if (configuracao == null) return null;
-
-    if (request.HoraAbertura >= request.HoraFechamento)
-        _notificationContext.AddNotification("Hora da abertura deve ser anterior a hora de fechamento.");
-
-    if (request.CapacidadeDiaria <= 0)
-        _notificationContext.AddNotification("Capacidade diária da unidade deve ser maior que 0.");
-
-    if (_notificationContext.HasNotifications)
-        return null;
-
-    configuracao.DiaSemana = request.DiaSemana;
-    configuracao.HoraAbertura = request.HoraAbertura;
-    configuracao.HoraFechamento = request.HoraFechamento;
-    configuracao.CapacidadeDiaria = request.CapacidadeDiaria;
-    configuracao.TempoMedioAtendimentoMinutos = request.TempoMedioAtendimentoMinutos;
-    configuracao.ConfiguracaoAtiva = request.ConfiguracaoAtiva;
-
-    _nexaDbContext.ConfiguracoesOperacionais.Update(configuracao);
-    await _nexaDbContext.SalvarAlteracoes();
-
-    return configuracao;
+    _notificationContext.AddNotification("Unidade de saúde já está ativa!");
+    return null;
 }
 ```
-
-### B. No `ConfiguracaoOperacionalController.cs`:
-Conectar as chamadas:
+Na controller `UnidadesSaudeController.cs`, injete `NotificationContext notificationContext` no construtor (igual você fez em `ConfiguracaoOperacionalController`) e verifique:
 ```csharp
-[HttpPut("{id:int}")]
-[ProducesResponseType(StatusCodes.Status204NoContent)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-[ProducesResponseType(StatusCodes.Status404NotFound)]
-public async Task<IActionResult> AtualizarConfiguracoes(int id, [FromBody] AtualizarConfiguracaoRequest request)
+if (_notificationContext.HasNotifications)
 {
-    var config = await _configuracaoOperacionalService.AtualizarConfiguracaoAsync(id, request);
-    if (_notificationContext.HasNotifications)
-        return BadRequest(new { status = 400, erros = _notificationContext.notifications });
-
-    if (config == null)
-        return NotFound(new { status = 404, mensagem = $"Configuração operacional com ID {id} não encontrada." });
-
-    return NoContent();
-}
-
-[HttpDelete("{id:int}")]
-[ProducesResponseType(StatusCodes.Status204NoContent)]
-[ProducesResponseType(StatusCodes.Status404NotFound)]
-public async Task<IActionResult> ExcluirConfiguracao(int id)
-{
-    var excluido = await _configuracaoOperacionalService.ExcluirConfiguracao(id);
-    if (!excluido)
-        return NotFound(new { status = 404, mensagem = $"Configuração operacional com ID {id} não encontrada para exclusão." });
-
-    return NoContent();
+    return BadRequest(new { status = 400, erros = _notificationContext.notifications });
 }
 ```
+Isso evita que uma unidade já ativa retorne falso `404 Not Found` e passe a responder `400 Bad Request` com a mensagem clara!
 
 ---
 
-## 🗄️ 6. Como Rodar a Migration no Oracle Local (Passo Final)
+### 4. ⚠️ Tipo do Enum em `AtualizarConfiguracaoRequest.cs`
+No DTO `AtualizarConfiguracaoRequest.cs`:
+* Troque `public DayOfWeek DiaSemana` por `public DiaDaSemana DiaSemana` (usando o seu enum `Nexa.Dotnet.Enum`).
+* Assim, no método `AtualizarConfiguracaoAsync`, você pode descomentar a linha `config.DiaSemana = request.DiaSemana;` sem erro de compilação!
 
-Assim que fizer esses pequenos ajustes:
+---
+
+## 🗄️ 5. Roteiro das Migrations no Oracle (Passo a Passo)
+
+Quando estiver pronto com a conexão configurada no `user-secrets`:
+
 ```powershell
 cd Nexa.Dotnet
 
-# 1. Cria o histórico de migração Code-First
+# 1. Gera os arquivos de migração Code-First
 dotnet ef migrations add InitialCreate
 
-# 2. Cria as tabelas e relacionamentos físicos no Oracle
+# 2. Aplica as tabelas e chaves no Oracle
 dotnet ef database update
 ```
 
-Descanse merecidamente! O projeto está seguro no GitHub, com código moderno e arquitetura aprovada. Quando você voltar, estaremos prontos para fechar essas linhas finais e rodar a migration!
+O EF criará as tabelas `tb_unidades_gestao` e `tb_configuracao_operacional` automaticamente.
+
+---
+
+## 🏁 6. Checklist de Entrega FIAP (100 Pontos)
+
+- [x] Arquitetura em camadas (Controller, Service, Data, Models, DTOs) — **20 pts**
+- [x] Relacionamento 1:N com integridade e Data Annotations — **20 pts**
+- [ ] Code-First Migrations executada no Oracle — **25 pts**
+- [x] CRUD completo com status HTTP 200, 201, 204, 400, 404 — **20 pts**
+- [x] Tratamento de erros e Notification Pattern — **10 pts**
+- [x] Documentação e README completo com payloads de teste — **5 pts**

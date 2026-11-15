@@ -62,10 +62,8 @@ public class ConfiguracaoOperacionalService
         return configuracao;
     }
 
-    public ConfiguracaoOperacional? BuscarPorId(int id)
-    {
-        var listaConfiguracoes = ListarConfiguracoesUnidadeAsync(id);
-        return listaConfiguracoes.FirstOrDefault(c => c.Id == id);
+    public ConfiguracaoOperacional? BuscarPorId(int id) { 
+        return _nexaDbContext.ConfiguracoesOperacionais.FirstOrDefault(c => c.Id == id);
     }
 
     public async Task<ConfiguracaoOperacional?> AtualizarConfiguracaoAsync(int id, AtualizarConfiguracaoRequest request)

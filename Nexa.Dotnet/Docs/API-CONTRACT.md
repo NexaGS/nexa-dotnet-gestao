@@ -1,77 +1,80 @@
-﻿# Contrato da API
+﻿# 📑 Contrato da API REST — Nexa .NET
 
-## Unidades
+## 🏥 1. Endpoints de Unidades de Saúde (`/api/unidades-saude`)
 
-```http
-GET    /api/unidades-gestao
-GET    /api/unidades-gestao/{id}
-POST   /api/unidades-gestao
-PUT    /api/unidades-gestao/{id}
-DELETE /api/unidades-gestao/{id}
-```
+| Método | Rota | Descrição | Status Sucesso | Status Erro |
+| :--- | :--- | :--- | :---: | :---: |
+| `GET` | `/api/unidades-saude` | Listagem de todas as unidades | `200 OK` | - |
+| `GET` | `/api/unidades-saude/{id}` | Busca de unidade por ID | `200 OK` | `404 Not Found` |
+| `POST` | `/api/unidades-saude` | Cadastro de nova unidade | `201 Created` | `400 Bad Request` |
+| `PUT` | `/api/unidades-saude/{id}/nome` | Atualização do nome da unidade | `204 NoContent` | `404 Not Found` |
+| `PUT` | `/api/unidades-saude/{id}/ativar-unidade` | Ativa a unidade de saúde | `204 NoContent` | `400 / 404` |
+| `PUT` | `/api/unidades-saude/{id}/desativar-unidade` | Desativa a unidade de saúde | `204 NoContent` | `400 / 404` |
+| `PUT` | `/api/unidades-saude/{id}/endereco` | Atualização do endereço da unidade | `204 NoContent` | `404 Not Found` |
+| `DELETE` | `/api/unidades-saude/{id}` | Exclusão de unidade | `204 NoContent` | `404 Not Found` |
 
-## Configurações
-
-```http
-GET    /api/configuracoes-operacionais
-GET    /api/configuracoes-operacionais/{id}
-POST   /api/configuracoes-operacionais
-PUT    /api/configuracoes-operacionais/{id}
-DELETE /api/configuracoes-operacionais/{id}
-```
-
-## POST unidade
-
+### Exemplo de Payload — POST Unidade
 ```json
 {
-  "nome": "UBS Vila Mariana",
-  "codigoCnes": "1234567",
-  "endereco": "Rua Vergueiro, 1000",
-  "ativa": true
+  "nomeUnidade": "UBS Vila Mariana - Dr. Cláudio",
+  "codigoCnes": "2078015",
+  "ativa": true,
+  "endereco": {
+    "logradouro": "Rua Domingos de Morais",
+    "numero": "800",
+    "complemento": "Bloco A",
+    "bairro": "Vila Mariana",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "04010000"
+  }
 }
 ```
 
-Resposta: 201 Created.
+---
 
-## POST configuração
+## ⚙️ 2. Endpoints de Configurações Operacionais (`/api/configuracoes-operacionais`)
 
+| Método | Rota | Descrição | Status Sucesso | Status Erro |
+| :--- | :--- | :--- | :---: | :---: |
+| `GET` | `/api/configuracoes-operacionais/{unidadeId}` | Lista configurações de uma unidade | `200 OK` | `404 Not Found` |
+| `POST` | `/api/configuracoes-operacionais` | Cadastra regra de funcionamento semanal | `201 Created` | `400 Bad Request` |
+| `PUT` | `/api/configuracoes-operacionais/{id}` | Atualiza horários e capacidade | `204 NoContent` | `400 / 404` |
+| `DELETE` | `/api/configuracoes-operacionais/{id}` | Exclui regra de funcionamento | `204 NoContent` | `404 Not Found` |
+
+### Exemplo de Payload — POST Configuração
 ```json
 {
-  "unidadeGestaoId": 1,
-  "diaSemana": "SEGUNDA",
+  "unidadeSaudeId": 1,
+  "diaSemana": 1,
   "horaAbertura": "07:00",
   "horaFechamento": "19:00",
   "capacidadeDiaria": 120,
-  "tempoMedioAtendimento": 20,
-  "ativa": true
+  "tempoMedioAtendimentoMinutos": 15,
+  "configuracaoAtiva": true
 }
 ```
+*(Nota: `diaSemana: 1` corresponde a `Segunda` no enum `DiaDaSemana`).*
 
-Resposta: 201 Created.
+---
 
-## Status obrigatórios
+## 🛡️ 3. Padrão de Retorno de Erros (Critérios FIAP)
 
-- GET válido: 200;
-- POST válido: 201;
-- PUT válido: 204;
-- DELETE válido: 204;
-- dado inválido: 400;
-- ID inexistente: 404.
-
-## Erro 400
-
+### Erro 400 — Bad Request (Validação de Regra de Negócio)
 ```json
 {
   "status": 400,
-  "mensagem": "A hora de abertura deve ser anterior ao fechamento."
+  "erros": [
+    "Hora da abertura deve ser anterior a hora de fechamento.",
+    "Capacidade diária da unidade deve ser maior que 0."
+  ]
 }
 ```
 
-## Erro 404
-
+### Erro 404 — Not Found (Recurso Inexistente)
 ```json
 {
   "status": 404,
-  "mensagem": "Configuração operacional não encontrada."
+  "mensagem": "Não foi possível retornar unidade de saúde com ID: 99"
 }
 ```
