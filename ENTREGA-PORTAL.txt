@@ -1,0 +1,31 @@
+======================================================================
+FIAP - GLOBAL SOLUTION 2026/2 - CITIZENTECH
+DISCIPLINA: ADVANCED BUSINESS DEVELOPMENT WITH .NET
+TURMA: 2TDSPS
+======================================================================
+
+INTEGRANTES DO GRUPO:
+
+RM566667 - Paulo Cavalcante Caroba
+RM566610 - Renan da Silva Paulino
+RM567254 - Sergio Henrique da Silva Santos
+
+----------------------------------------------------------------------
+LINKS DA ENTREGA:
+----------------------------------------------------------------------
+
+LINK DO REPOSITÓRIO GITHUB (PÚBLICO):
+https://github.com/cavalcantecpaulo/nexa-dotnet
+
+LINK DO VÍDEO DEMONSTRATIVO NO YOUTUBE (ATÉ 5 MINUTOS):
+[COLE_AQUI_O_LINK_DO_SEU_VIDEO_DO_YOUTUBE]
+
+======================================================================
+RESUMO DA SOLUÇÃO (CITIZENTECH - NEXA):
+======================================================================
+Módulo Administrativo e de Gestão de Capacidade em Saúde Pública (SUS).
+API REST desenvolvida em ASP.NET Core com Entity Framework Core e 
+Oracle Database (oracle.fiap.com.br) utilizando Code-First Migrations.
+Gerencia o cadastro oficial de Unidades Básicas de Saúde (CNES),
+agenda de horários e teto diário de atendimentos com relacionamento 1:N.
+======================================================================

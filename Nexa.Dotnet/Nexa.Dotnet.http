@@ -1,6 +1,123 @@
 @Nexa.Dotnet_HostAddress = http://localhost:5094
 
-GET {{Nexa.Dotnet_HostAddress}}/weatherforecast/
+### 1. Listar Unidades de Saúde
+GET {{Nexa.Dotnet_HostAddress}}/api/unidades-saude
 Accept: application/json
 
-###
+### 2. Cadastrar Nova Unidade de Saúde (Sucesso - 201 Created)
+POST {{Nexa.Dotnet_HostAddress}}/api/unidades-saude
+Content-Type: application/json
+
+{
+  "nomeUnidade": "UBS Vila Mariana - Dr. Cláudio Caroba",
+  "codigoCnes": "2078015",
+  "ativa": true,
+  "endereco": {
+    "logradouro": "Rua Domingos de Morais",
+    "numero": "800",
+    "complemento": "Bloco A - Térreo",
+    "bairro": "Vila Mariana",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "cep": "04010000"
+  }
+}
+
+### 3. Consultar Unidade por ID (Sucesso - 200 OK)
+GET {{Nexa.Dotnet_HostAddress}}/api/unidades-saude/1
+Accept: application/json
+
+### 4. Consultar Unidade com ID Inexistente (Erro 404 Not Found)
+GET {{Nexa.Dotnet_HostAddress}}/api/unidades-saude/99999
+Accept: application/json
+
+### 5. Atualizar Nome da Unidade (Sucesso - 204 NoContent)
+PUT {{Nexa.Dotnet_HostAddress}}/api/unidades-saude/1/nome?nome=UBS%20Vila%20Mariana%20-%20Central%20Ampliada
+
+### 6. Atualizar Endereço da Unidade (Sucesso - 204 NoContent)
+PUT {{Nexa.Dotnet_HostAddress}}/api/unidades-saude/1/endereco
+Content-Type: application/json
+
+{
+  "logradouro": "Rua Domingos de Morais",
+  "numero": "850",
+  "complemento": "Edifício Anexo",
+  "bairro": "Vila Mariana",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "cep": "04010100"
+}
+
+### 7. Inativar Unidade de Saúde (Sucesso - 204 NoContent)
+PUT {{Nexa.Dotnet_HostAddress}}/api/unidades-saude/1/desativar-unidade
+
+### 8. Tentar Inativar Unidade Já Inativa (Erro 400 Bad Request)
+PUT {{Nexa.Dotnet_HostAddress}}/api/unidades-saude/1/desativar-unidade
+
+### 9. Ativar Unidade de Saúde (Sucesso - 204 NoContent)
+PUT {{Nexa.Dotnet_HostAddress}}/api/unidades-saude/1/ativar-unidade
+
+### 10. Cadastrar Configuração Operacional (Sucesso - 201 Created)
+POST {{Nexa.Dotnet_HostAddress}}/api/configuracoes-operacionais
+Content-Type: application/json
+
+{
+  "unidadeSaudeId": 1,
+  "diaSemana": 1,
+  "horaAbertura": "07:00",
+  "horaFechamento": "19:00",
+  "capacidadeDiaria": 120,
+  "tempoMedioAtendimentoMinutos": 15,
+  "configuracaoAtiva": true
+}
+
+### 11. Teste de Validação: Horário Inválido (Erro 400 Bad Request)
+POST {{Nexa.Dotnet_HostAddress}}/api/configuracoes-operacionais
+Content-Type: application/json
+
+{
+  "unidadeSaudeId": 1,
+  "diaSemana": 2,
+  "horaAbertura": "19:00",
+  "horaFechamento": "07:00",
+  "capacidadeDiaria": 100,
+  "tempoMedioAtendimentoMinutos": 15,
+  "configuracaoAtiva": true
+}
+
+### 12. Teste de Validação: Capacidade Menor ou Igual a Zero (Erro 400 Bad Request)
+POST {{Nexa.Dotnet_HostAddress}}/api/configuracoes-operacionais
+Content-Type: application/json
+
+{
+  "unidadeSaudeId": 1,
+  "diaSemana": 3,
+  "horaAbertura": "08:00",
+  "horaFechamento": "17:00",
+  "capacidadeDiaria": 0,
+  "tempoMedioAtendimentoMinutos": 15,
+  "configuracaoAtiva": true
+}
+
+### 13. Consultar Configurações por Unidade (Sucesso - 200 OK)
+GET {{Nexa.Dotnet_HostAddress}}/api/configuracoes-operacionais/1
+Accept: application/json
+
+### 14. Atualizar Configuração Operacional (Sucesso - 204 NoContent)
+PUT {{Nexa.Dotnet_HostAddress}}/api/configuracoes-operacionais/1
+Content-Type: application/json
+
+{
+  "diaSemana": 1,
+  "horaAbertura": "06:30",
+  "horaFechamento": "20:00",
+  "capacidadeDiaria": 150,
+  "tempoMedioAtendimentoMinutos": 20,
+  "configuracaoAtiva": true
+}
+
+### 15. Excluir Configuração Operacional (Sucesso - 204 NoContent)
+DELETE {{Nexa.Dotnet_HostAddress}}/api/configuracoes-operacionais/1
+
+### 16. Excluir Unidade de Saúde (Sucesso - 204 NoContent)
+DELETE {{Nexa.Dotnet_HostAddress}}/api/unidades-saude/1
