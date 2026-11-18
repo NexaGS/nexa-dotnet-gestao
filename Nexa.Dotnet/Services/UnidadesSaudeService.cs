@@ -1,4 +1,5 @@
-﻿using Nexa.Dotnet.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Nexa.Dotnet.Data;
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Mapper;
 using Nexa.Dotnet.Models;
@@ -18,13 +19,15 @@ public class UnidadesSaudeService
 
     public UnidadeSaudeGestao? BuscarPorId(int id)
     {
-        var listaUnidades = _nexaDbContext.UnidadesSaude;
-        return listaUnidades.FirstOrDefault(u => u.Id == id);
+        return _nexaDbContext.UnidadesSaude.Include(u => u.Configuracoes).FirstOrDefault(u => u.Id == id);
     }
 
     public ICollection<UnidadeDetalhesResponse> ListarUnidadesAsync()
 	{
-		return _nexaDbContext.UnidadesSaude.Select(u => UnidadeSaudeMapper.MapearParaResponse(u)).ToList();
+		return _nexaDbContext.UnidadesSaude
+            .Include(u => u.Configuracoes)
+            .AsEnumerable()
+            .Select(u => UnidadeSaudeMapper.MapearParaResponse(u)).ToList();
 	}
 
     public UnidadeDetalhesResponse? BuscarUnidadeSaudeAsync(int id)

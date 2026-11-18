@@ -21,7 +21,7 @@ public static class UnidadeSaudeMapper
             Estado = unidade.Endereco.Estado,
             Cep = unidade.Endereco.Cep
         },
-        Configuracoes = unidade.Configuracoes
+        Configuracoes = unidade.Configuracoes.AsEnumerable()
             .Select(ConfiguracaoOperacionalMapper.MapearParaResponse)
             .ToList()
 
