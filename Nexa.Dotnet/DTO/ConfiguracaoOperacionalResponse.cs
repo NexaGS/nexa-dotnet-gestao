@@ -1,11 +1,13 @@
-﻿namespace Nexa.Dotnet.DTOs;
+﻿using Nexa.Dotnet.Enum;
+
+namespace Nexa.Dotnet.DTOs;
 
 public class ConfiguracaoOperacionalResponse
 {
     public int Id { get; set; }
     public int UnidadeSaudeId { get; set; }
-    public DayOfWeek DiaSemana { get; set; }
-    public string DiaSemanaDescricao { get; set; } = string.Empty;
+    public int DiaSemana { get; set; }
+    public DiaDaSemana DiaSemanaDescricao { get; set; }
     public string HoraAbertura { get; set; } = string.Empty;
     public string HoraFechamento { get; set; } = string.Empty;
     public int CapacidadeDiaria { get; set; }

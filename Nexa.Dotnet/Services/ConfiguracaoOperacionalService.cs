@@ -1,5 +1,6 @@
 ﻿using Nexa.Dotnet.Data;
 using Nexa.Dotnet.DTOs;
+using Nexa.Dotnet.Mapper;
 using Nexa.Dotnet.Models;
 using Nexa.Dotnet.Notifications;
 
@@ -19,12 +20,13 @@ public class ConfiguracaoOperacionalService
         _notificationContext = notificationContext;
     }
 
-    public ICollection<ConfiguracaoOperacional> ListarConfiguracoesUnidadeAsync(int unidadeSaudeId)
+    public ICollection<ConfiguracaoOperacionalResponse> ListarConfiguracoesUnidadeAsync(int unidadeSaudeId)
     {
-        return _nexaDbContext.ConfiguracoesOperacionais.Where(config => config.UnidadeSaudeId == unidadeSaudeId).ToList();
+        return _nexaDbContext.ConfiguracoesOperacionais.Where(config => config.UnidadeSaudeId == unidadeSaudeId)
+            .Select(c => ConfiguracaoOperacionalMapper.MapearParaResponse(c)).ToList();
     }
 
-    public async Task<ConfiguracaoOperacional?> CriarConfiguracaoAsync(CriarConfiguracaoRequest request)
+    public async Task<ConfiguracaoOperacionalResponse?> CriarConfiguracaoAsync(CriarConfiguracaoRequest request)
     {
         var unidadeSaude = _unidadesSaudeService.BuscarPorId(request.UnidadeSaudeId);
 
@@ -59,14 +61,14 @@ public class ConfiguracaoOperacionalService
         _nexaDbContext.ConfiguracoesOperacionais.AddAsync(configuracao);
         await _nexaDbContext.SalvarAlteracoes();
 
-        return configuracao;
+        return ConfiguracaoOperacionalMapper.MapearParaResponse(configuracao);
     }
 
     public ConfiguracaoOperacional? BuscarPorId(int id) { 
         return _nexaDbContext.ConfiguracoesOperacionais.FirstOrDefault(c => c.Id == id);
     }
 
-    public async Task<ConfiguracaoOperacional?> AtualizarConfiguracaoAsync(int id, AtualizarConfiguracaoRequest request)
+    public async Task<ConfiguracaoOperacionalResponse?> AtualizarConfiguracaoAsync(int id, AtualizarConfiguracaoRequest request)
     {
         var config = BuscarPorId(id);
 
@@ -100,7 +102,7 @@ public class ConfiguracaoOperacionalService
         _nexaDbContext.ConfiguracoesOperacionais.Update(config);
         await _nexaDbContext.SalvarAlteracoes();
 
-        return config;
+        return ConfiguracaoOperacionalMapper.MapearParaResponse(config);
     }
     public async Task<bool> ExcluirConfiguracaoAsync(int id)
     {

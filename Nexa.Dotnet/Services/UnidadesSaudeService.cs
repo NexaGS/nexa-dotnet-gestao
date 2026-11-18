@@ -1,5 +1,6 @@
 ﻿using Nexa.Dotnet.Data;
 using Nexa.Dotnet.DTOs;
+using Nexa.Dotnet.Mapper;
 using Nexa.Dotnet.Models;
 using Nexa.Dotnet.Notifications;
 
@@ -17,23 +18,22 @@ public class UnidadesSaudeService
 
     public UnidadeSaudeGestao? BuscarPorId(int id)
     {
-        var listaUnidades = ListarUnidadesAsync();
+        var listaUnidades = _nexaDbContext.UnidadesSaude;
         return listaUnidades.FirstOrDefault(u => u.Id == id);
     }
 
-    public ICollection<UnidadeSaudeGestao> ListarUnidadesAsync()
+    public ICollection<UnidadeDetalhesResponse> ListarUnidadesAsync()
 	{
-		return _nexaDbContext.UnidadesSaude.ToList();
+		return _nexaDbContext.UnidadesSaude.Select(u => UnidadeSaudeMapper.MapearParaResponse(u)).ToList();
 	}
 
-    public UnidadeSaudeGestao? BuscarUnidadeSaudeAsync(int id)
+    public UnidadeDetalhesResponse? BuscarUnidadeSaudeAsync(int id)
     {
-        return BuscarPorId(id) != null ? BuscarPorId(id) : null;
+        return BuscarPorId(id) != null ? UnidadeSaudeMapper.MapearParaResponse(BuscarPorId(id)) : null;
 	}
 
 
-
-    public async Task<UnidadeSaudeGestao> CriarUnidadeAsync(CriarUnidadeRequest request)
+    public async Task<UnidadeDetalhesResponse> CriarUnidadeAsync(CriarUnidadeRequest request)
     {
         var unidade = new UnidadeSaudeGestao
         {
@@ -56,10 +56,10 @@ public class UnidadesSaudeService
         _nexaDbContext.UnidadesSaude.AddAsync(unidade);
         await _nexaDbContext.SalvarAlteracoes();
 
-        return unidade;
+        return UnidadeSaudeMapper.MapearParaResponse(unidade);
     }
 
-    public async Task<UnidadeSaudeGestao?> AtualizarNomeUnidadeAsync(int id, string nome)
+    public async Task<UnidadeDetalhesResponse?> AtualizarNomeUnidadeAsync(int id, string nome)
     {
         var unidade = BuscarPorId(id);
 
@@ -74,10 +74,10 @@ public class UnidadesSaudeService
         _nexaDbContext.UnidadesSaude.Update(unidade);
         await _nexaDbContext.SalvarAlteracoes();
 
-        return unidade;
+        return UnidadeSaudeMapper.MapearParaResponse(unidade);
     }
 
-    public async Task<UnidadeSaudeGestao?> TornarStatusAtivoUnidadeAsync(int id)
+    public async Task<UnidadeDetalhesResponse?> TornarStatusAtivoUnidadeAsync(int id)
     {
         var unidade = BuscarPorId(id);
 
@@ -97,9 +97,9 @@ public class UnidadesSaudeService
         _nexaDbContext.UnidadesSaude.Update(unidade);
         await _nexaDbContext.SalvarAlteracoes();
 
-        return unidade;
+        return UnidadeSaudeMapper.MapearParaResponse(unidade);
     }
-    public async Task<UnidadeSaudeGestao?> TornarStatusInativoUnidadeAsync(int id)
+    public async Task<UnidadeDetalhesResponse?> TornarStatusInativoUnidadeAsync(int id)
     {
         var unidade = BuscarPorId(id);
 
@@ -120,10 +120,10 @@ public class UnidadesSaudeService
         _nexaDbContext.UnidadesSaude.Update(unidade);
         await _nexaDbContext.SalvarAlteracoes();
 
-        return unidade;
+        return UnidadeSaudeMapper.MapearParaResponse(unidade); ;
     }
 
-    public async Task<UnidadeSaudeGestao?> AtualizarEnderecoUnidadeAsync(int id, EnderecoDto request)
+    public async Task<UnidadeDetalhesResponse?> AtualizarEnderecoUnidadeAsync(int id, EnderecoDto request)
     {
         var unidade = BuscarPorId(id);
 
@@ -145,7 +145,7 @@ public class UnidadesSaudeService
         _nexaDbContext.UnidadesSaude.Update(unidade);
         await _nexaDbContext.SalvarAlteracoes();
 
-        return unidade;
+        return UnidadeSaudeMapper.MapearParaResponse(unidade);
     }
 
     public async Task<bool> ExcluirUnidadeAsync(int id)

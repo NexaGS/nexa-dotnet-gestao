@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Nexa.Dotnet.DTOs;
 using Nexa.Dotnet.Models;
 using Nexa.Dotnet.Notifications;
 using Nexa.Dotnet.Services;
-using System;
 
 namespace Nexa.Dotnet.Controllers;
 
@@ -22,7 +20,7 @@ public class ConfiguracaoOperacionalController : ControllerBase
     }
 
     [HttpGet("{unidadeId}")]
-    [ProducesResponseType(typeof(ConfiguracaoOperacional), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ICollection<ConfiguracaoOperacionalResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult BuscarConfiguracoesUnidade(int unidadeId)
     {
@@ -36,11 +34,16 @@ public class ConfiguracaoOperacionalController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(ConfiguracaoOperacional), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ConfiguracaoOperacionalResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RegistrarConfiguracao([FromBody] CriarConfiguracaoRequest request)
     {
         var configuracao = await _configuracaoOperacionalService.CriarConfiguracaoAsync(request);
+        if (_notificationContext.HasNotifications)
+        {
+            return BadRequest(new { status = 400, erros = _notificationContext.notifications });
+        }
+
         if(configuracao == null)
         {
             return BadRequest($"Não foi possível criar nova configuração");

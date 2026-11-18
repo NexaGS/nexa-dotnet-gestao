@@ -21,14 +21,14 @@ public class UnidadesSaudeController : ControllerBase
 	}
 
 	[HttpGet]
-    [ProducesResponseType(typeof(ICollection<UnidadeSaudeGestao>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ICollection<UnidadeDetalhesResponse>), StatusCodes.Status200OK)]
     public IActionResult ListarUnidades()
 	{
 		return Ok(_unidadesSaudeService.ListarUnidadesAsync());
 	}
 
 	[HttpGet("{id}")]
-	[ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status200OK)]
+	[ProducesResponseType(typeof(UnidadeDetalhesResponse), StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	public IActionResult BuscarUnidadeSaude(int id)
 	{
@@ -43,7 +43,7 @@ public class UnidadesSaudeController : ControllerBase
 	}
 
 	[HttpPost]
-    [ProducesResponseType(typeof(UnidadeSaudeGestao), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(UnidadeDetalhesResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CriarUnidadeSaude([FromBody] CriarUnidadeRequest request)
 	{
@@ -144,5 +144,4 @@ public class UnidadesSaudeController : ControllerBase
 
 		return NoContent();
 	}
-
 }
