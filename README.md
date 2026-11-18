@@ -2,7 +2,7 @@
 
 API RESTful desenvolvida em **ASP.NET Core (C#)** e **Entity Framework Core com Oracle Database** para a **Global Solution FIAP 2026/2** na disciplina **Advanced Business Development with .NET**.
 
-O **Nexa** é um ecossistema de saúde pública integrado: enquanto o **Spring Boot** é responsável pela operação clínica e atendimento em tempo real ao cidadão (geolocalização Haversine, check-in, fila FIFO por especialidade e encerramento médico), a **API .NET** atua como o **módulo administrativo de retaguarda (back-office)**, responsável pelo cadastro oficial de unidades (CNES), parametrização da agenda de funcionamento semanal, teto de capacidade diária de atendimentos e inteligência operacional para feriados via BrasilAPI.
+O **Nexa** é um ecossistema de saúde pública integrado: enquanto o **Spring Boot** é responsável pela operação clínica e atendimento em tempo real ao cidadão (geolocalização Haversine, check-in, fila FIFO por especialidade e encerramento médico), a **API .NET** atua como o **módulo administrativo de retaguarda (back-office)**, responsável pelo cadastro oficial de unidades (CNES), parametrização da agenda de funcionamento semanal, teto de capacidade diária de atendimentos e controle operacional de disponibilidade das unidades.
 
 ---
 
@@ -31,7 +31,7 @@ flowchart LR
         G[Gestor da Unidade] --> H[Cadastro de Unidade via CNES]
         H --> I[Agenda Semanal: Abertura / Fechamento]
         I --> J[Teto de Capacidade Diária & Tempo Médio]
-        J --> K[Inteligência de Feriados via BrasilAPI]
+        J --> K[Status Operacional: Ativação / Inativação]
     end
 
     H -.->|Chave Canônica: Código CNES| B
@@ -83,8 +83,7 @@ erDiagram
 * **Oracle.EntityFrameworkCore:** Driver oficial da Oracle para persistência relacional;
 * **EF Core Migrations:** Versionamento completo e rastreável do banco de dados (Code-First);
 * **Swashbuckle / OpenAPI:** Documentação interativa Swagger UI;
-* **Notification Pattern (`NotificationContext`):** Acúmulo de falhas de domínio e resposta rica em HTTP 400 sem exceptions desnecessárias;
-* **Client HTTP Resiliente:** Integração com **BrasilAPI** para checagem em tempo real de feriados oficiais.
+* **Notification Pattern (`NotificationContext`):** Acúmulo de falhas de domínio e resposta rica em HTTP 400 sem exceptions desnecessárias.
 
 ---
 
@@ -126,8 +125,8 @@ dotnet run
 ```
 
 A API estará disponível em:
-* **API REST:** `http://localhost:5000` (ou porta informada no terminal)
-* **Swagger UI (Interativo):** `http://localhost:5000/swagger/index.html`
+* **API REST (HTTP):** `http://localhost:5094` (ou `https://localhost:7142`)
+* **Swagger UI (Interativo):** `http://localhost:5094/swagger/index.html` (ou `https://localhost:7142/swagger/index.html`)
 
 ---
 

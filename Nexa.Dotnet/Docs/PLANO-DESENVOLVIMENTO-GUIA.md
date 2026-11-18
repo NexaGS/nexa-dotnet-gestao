@@ -41,7 +41,7 @@ gantt
 | :--- | :---: | :--- |
 | **Modelos & Mapeamento** | ✅ 100% | `tb_unidades_gestao`, `tb_configuracao_operacional`, `Endereco` como `[Owned]`, `Ativa` mapeado para `NUMBER(1)`. |
 | **DbContext (`NexaDbContext`)** | ✅ 100% | Herdando de `DbContext`, com `DbSet` das entidades e `SalvarAlteracoes()`. |
-| **Injeção de Dependências (`Program.cs`)** | ✅ 100% | Scoped para Services, DbContext Oracle, `NotificationContext`, `HttpClient` resiliente e Swagger. |
+| **Injeção de Dependências (`Program.cs`)** | ✅ 100% | Scoped para Services, DbContext Oracle, `NotificationContext` e Swagger. |
 | **CRUD de Unidades de Saúde** | ✅ 100% | GET (todos e por ID), POST (com `CreatedAtAction`), PUT segregado (`/nome`, `/ativar-unidade`, `/desativar-unidade`, `/endereco`), DELETE (204). |
 | **CRUD de Configurações Operacionais** | ✅ 100% | GET (por unidade), POST (com validação de regras e `CreatedAtAction`), PUT (horários/capacidade), DELETE (204). |
 | **Tratamento de Erros & Notificações** | ✅ 100% | `NotificationContext` centralizado sem exceptions desnecessárias, retornando HTTP 400 semântico. |
@@ -155,7 +155,7 @@ dotnet ef database update
 ```powershell
 dotnet run
 ```
-Acesse: [http://localhost:5000/swagger/index.html](http://localhost:5000/swagger/index.html)
+Acesse: [http://localhost:5094/swagger/index.html](http://localhost:5094/swagger/index.html) (ou `https://localhost:7142/swagger/index.html`)
 
 ---
 
